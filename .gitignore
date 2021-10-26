@@ -1,0 +1,9 @@
+*~
+model.log
+*/input.csv
+__pycache__
+.python-version
+output/*
+metadata/*
+*.ipynb_checkpoints
+analysis/SRO_Notebook.ipynb

@@ -1,0 +1,34 @@
+{
+  "files": {
+    "opensafely-ethnicity.csv": {
+      "id": "opensafely/ethnicity/2020-04-27",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/ethnicity/2020-04-27/",
+      "downloaded_at": "2021-04-12 09:28:36.527864Z",
+      "sha": "3d2f3998b71863a80b24d60f6f4282e14191ae13"
+    },
+    "opensafely-learning-disabilities.csv": {
+      "id": "opensafely/learning-disabilities/2020-07-06",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/learning-disabilities/2020-07-06/",
+      "downloaded_at": "2021-04-13 15:03:59.415279Z",
+      "sha": "ab5b5f60e8525af5898ec1066fc820501b8e5e29"
+    },
+    "opensafely-systolic-blood-pressure-qof.csv": {
+      "id": "opensafely/systolic-blood-pressure-qof/3572b5fb",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/systolic-blood-pressure-qof/3572b5fb/",
+      "downloaded_at": "2021-06-14 13:15:20.607476Z",
+      "sha": "f2bc461e351499f4e5573a6f94e760b99979491e"
+    },
+    "opensafely-structured-medication-review-nhs-england.csv": {
+      "id": "opensafely/structured-medication-review-nhs-england/5459205f",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/structured-medication-review-nhs-england/5459205f/",
+      "downloaded_at": "2021-05-10 15:47:23.153812Z",
+      "sha": "7bd4843c423ef7618c6d8f27164dc0939f2c9a9a"
+    },
+    "opensafely-nhs-england-care-homes-residential-status.csv": {
+      "id": "opensafely/nhs-england-care-homes-residential-status/3712ef13",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/nhs-england-care-homes-residential-status/3712ef13/",
+      "downloaded_at": "2021-05-10 16:07:53.643159Z",
+      "sha": "357b2af4841e574f7d43bfeff143b39cdfed6997"
+    }
+  }
+}
