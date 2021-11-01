@@ -6,29 +6,10 @@ from cohortextractor import Measure
 from config import demographics, codelist_path
 from ebmdatalab import charts
 
+from study_definition import measures
+
 BASE_DIR = Path(__file__).parents[1]
 OUTPUT_DIR = BASE_DIR / "output"
-
-# Create default measures
-measures = [
-
-    Measure(
-        id="event_code_rate",
-        numerator="event",
-        denominator="population",
-        group_by=["event_code"]
-    ),
-
-    Measure(
-        id="practice_rate",
-        numerator="event",
-        denominator="population",
-        group_by=["practice"]
-    ),
-
-
-
-]
 
 #Add demographics measures
 
