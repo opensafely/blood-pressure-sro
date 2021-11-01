@@ -29,6 +29,12 @@
       "url": "https://codelists.opensafely.org/codelist/opensafely/nhs-england-care-homes-residential-status/3712ef13/",
       "downloaded_at": "2021-05-10 16:07:53.643159Z",
       "sha": "357b2af4841e574f7d43bfeff143b39cdfed6997"
+    },
+    "user-milanwiedemann-gastro-intestinal-bleed-ind01to04.csv": {
+      "id": "user/milanwiedemann/gastro-intestinal-bleed-ind01to04/5d4b7131",
+      "url": "https://codelists.opensafely.org/codelist/user/milanwiedemann/gastro-intestinal-bleed-ind01to04/5d4b7131/",
+      "downloaded_at": "2021-10-28 12:06:25.291703Z",
+      "sha": "217afda9d44e18f6168190d60121dbfcf10d6f07"
     }
   }
 }
