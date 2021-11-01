@@ -22,20 +22,20 @@ bp_home_codes = codelist_from_csv(
     column="code",
 )
 
-# COMMENT OUT FOR NOW, DONT NEED THESE CODELISTS AT THE MOMENT
-# ethnicity_codes = codelist_from_csv(
-#         "codelists/opensafely-ethnicity.csv",
-#         system="ctv3",
-#         column="Code",
-#         category_column="Grouping_6",
-#     )
+ethnicity_codes = codelist_from_csv(
+        "codelists/opensafely-ethnicity.csv",
+        system="ctv3",
+        column="Code",
+        category_column="Grouping_6",
+    )
 
-# nhse_care_homes_codes = codelist_from_csv("codelists/opensafely-nhs-england-care-homes-residential-status.csv",
-#     system="snomed",
-#     column="code",)
+nhse_care_homes_codes = codelist_from_csv("codelists/opensafely-nhs-england-care-homes-residential-status.csv",
+    system="snomed",
+    column="code",
+)
 
-# ld_codes = codelist_from_csv(
-#     "codelists/opensafely-learning-disabilities.csv",
-#     system="ctv3",
-#     column="CTV3Code",
-# )
+ld_codes = codelist_from_csv(
+    "codelists/opensafely-learning-disabilities.csv",
+    system="ctv3",
+    column="CTV3Code",
+)
