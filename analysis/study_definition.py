@@ -10,7 +10,7 @@ from cohortextractor import (
 )
 
 # Import codelists
-from codelists import codelist, ld_codes, nhse_care_homes_codes
+from codelists import codelist, ld_codes, nhse_care_homes_codes, bp_dec_codes
 
 from config import start_date, end_date, codelist_path, demographics
 
@@ -32,8 +32,8 @@ study = StudyDefinition(
         """
         registered AND
         (NOT died) AND
-        (sex = 'F' OR sex='M') AND
-        (age => 45) AND
+        (sex = 'F' OR sex = 'M') AND
+        (age >= 45) AND
         (bp_declined = 1)
         """,
 
