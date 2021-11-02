@@ -30,20 +30,22 @@ study = StudyDefinition(
 
     population=patients.satisfying(
         """
+        # Define general population parameters
         registered AND
         (NOT died) AND
         (sex = 'F' OR sex = 'M') AND
 
-        # Rule number 1
+        # Denominator Rule Number 1
         (age >= 45) AND
         
-        # Rule number 2 not needed
+        # Denominator Rule Number 2
+        # This rule doesnt exlude any patients
         
-        # Rule number 3
-        (bp_declined = 0)
+        # Denominator Rule Number 3
+        (bp_declined_dr3 = 0) AND
         
-        # Rule number 4
-
+        # Denominator Rule Number 4
+        (NOT registered_exclude)
         """,
 
         registered=patients.registered_as_of(
@@ -57,10 +59,17 @@ study = StudyDefinition(
             return_expectations={"incidence": 0.1}
         ),
 
-        bp_declined=patients.with_these_clinical_events(
+        bp_declined_dr3=patients.with_these_clinical_events(
             codelist=bp_dec_codes,
             returning="binary_flag"
+        ),
+        # TODO I NEED END DATE HERE, NOT START DATE
+        registered_exclude=patients.registered_with_one_practice_between(
+            start_date="index_date - 3 months",
+            end_date="index_date",
+            return_expectations={"incidence": 0.1}
         )
+
     ),
 
     age=patients.age_as_of(
@@ -154,7 +163,8 @@ study = StudyDefinition(
 
     event=patients.with_these_clinical_events(
         codelist=codelist,
-        # Numerator Rule Number 1 MILAN TO CHECK HOW TO DO THIS!
+        # Numerator Rule Number 1 
+        # TODO WE NEED END DATE HERE, HOW CAN I DO THIS?
         between=["first_day_of_month(index_date) - 5 years", "last_day_of_month(index_date)"],
         returning="binary_flag",
         return_expectations={"incidence": 0.5}
