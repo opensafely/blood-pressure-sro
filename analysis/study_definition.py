@@ -33,8 +33,17 @@ study = StudyDefinition(
         registered AND
         (NOT died) AND
         (sex = 'F' OR sex = 'M') AND
+
+        # Rule number 1
         (age >= 45) AND
-        (bp_declined = 1)
+        
+        # Rule number 2 not needed
+        
+        # Rule number 3
+        (bp_declined = 0)
+        
+        # Rule number 4
+
         """,
 
         registered=patients.registered_as_of(
@@ -145,21 +154,22 @@ study = StudyDefinition(
 
     event=patients.with_these_clinical_events(
         codelist=codelist,
-        between=["index_date", "last_day_of_month(index_date)"],
+        # Numerator Rule Number 1 MILAN TO CHECK HOW TO DO THIS!
+        between=["first_day_of_month(index_date) - 5 years", "last_day_of_month(index_date)"],
         returning="binary_flag",
         return_expectations={"incidence": 0.5}
     ),
 
     event_code=patients.with_these_clinical_events(
         codelist=codelist,
-        between=["index_date", "last_day_of_month(index_date)"],
+        between=["first_day_of_month(index_date) - 5 years", "last_day_of_month(index_date)"],
         returning="code",
         return_expectations={"category": {
             "ratios": {x: 1/len(codelist_expectation_codes) for x in codelist_expectation_codes}}, }
     ),
 )
 
-# Create default measures
+# # Create default measures
 measures = [
 
     Measure(
@@ -180,23 +190,22 @@ measures = [
 
 ]
 
-
 # Add demographics measures
 
-# for d in demographics:
+for d in demographics:
 
-#     if d == 'imd':
-#         apply_suppression = False
+    if d == 'imd':
+        apply_suppression = False
 
-#     else:
-#         apply_suppression = True
+    else:
+        apply_suppression = True
 
-#     m = Measure(
-#         id=f'{d}_rate',
-#         numerator="event",
-#         denominator="population",
-#         group_by=[d],
-#         small_number_suppression=apply_suppression
-#     )
+    m = Measure(
+        id=f'{d}_rate',
+        numerator="event",
+        denominator="population",
+        group_by=[d],
+        small_number_suppression=apply_suppression
+    )
 
-#     measures.append(m)
+    measures.append(m)
