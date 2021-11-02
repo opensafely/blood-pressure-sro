@@ -9,7 +9,7 @@ end_date = "2022-03-31"
 demographics = ["sex", "age_band", "region", "imd", "ethnicity", "learning_disability", "care_home_status"]
 
 #name of measure
-marker="Systolic blood pressure"
+marker="Blood Pressure"
 
 # Codelist path
 # MILAN TODO ADD THE CODELIST I NEED HERE, NOT SURE ABOUT THIS ...
