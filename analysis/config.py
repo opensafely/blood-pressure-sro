@@ -24,6 +24,7 @@ def calculate_date(date, months):
     return date_calc.strftime("%Y-%m-%d")
 
 # Define more date variables needed for this project
+start_date_minus_5y = calculate_date(date = end_date, months = -(5 * 12))
 end_date_minus_3m = calculate_date(date = end_date, months = -3)
 
 # demographic variables by which code use is broken down
