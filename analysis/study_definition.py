@@ -12,7 +12,7 @@ from cohortextractor import (
 # Import codelists
 from codelists import codelist, ld_codes, nhse_care_homes_codes, bp_dec_codes
 
-from config import start_date, end_date, codelist_path, demographics
+from config import start_date, end_date, start_date_minus_5y, end_date_minus_3m, codelist_path, demographics
 
 codelist_df = pd.read_csv(codelist_path)
 codelist_expectation_codes = codelist_df['code'].unique()
@@ -45,7 +45,7 @@ study = StudyDefinition(
         (bp_declined_dr3 = 0) AND
         
         # Denominator Rule Number 4
-        (NOT registered_exclude)
+        (registered_include)
         """,
 
         registered=patients.registered_as_of(
@@ -63,10 +63,10 @@ study = StudyDefinition(
             codelist=bp_dec_codes,
             returning="binary_flag"
         ),
-        # TODO I NEED END DATE HERE, NOT START DATE
-        registered_exclude=patients.registered_with_one_practice_between(
-            start_date="index_date - 3 months",
-            end_date="index_date",
+
+        registered_include=patients.registered_with_one_practice_between(
+            start_date=end_date_minus_3m,
+            end_date=end_date,
             return_expectations={"incidence": 0.1}
         )
 
@@ -164,15 +164,14 @@ study = StudyDefinition(
     event=patients.with_these_clinical_events(
         codelist=codelist,
         # Numerator Rule Number 1 
-        # TODO WE NEED END DATE HERE, HOW CAN I DO THIS?
-        between=["first_day_of_month(index_date) - 5 years", "last_day_of_month(index_date)"],
+        between=[start_date_minus_5y, end_date],
         returning="binary_flag",
         return_expectations={"incidence": 0.5}
     ),
 
     event_code=patients.with_these_clinical_events(
         codelist=codelist,
-        between=["first_day_of_month(index_date) - 5 years", "last_day_of_month(index_date)"],
+        between=[start_date_minus_5y, end_date],
         returning="code",
         return_expectations={"category": {
             "ratios": {x: 1/len(codelist_expectation_codes) for x in codelist_expectation_codes}}, }
