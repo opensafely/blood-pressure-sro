@@ -44,7 +44,7 @@ study = StudyDefinition(
         (bp_declined = 0) AND
         
         # Denominator Rule Number 4
-        (registered_include)
+        (NOT registered_exclude)
         """,
 
         registered=patients.registered_as_of(
@@ -67,7 +67,7 @@ study = StudyDefinition(
         # Reject patients passed to this rule who registered with the GP practice in the 3 month period 
         # leading up to and including the payment period end date. 
         # Select the remaining patients.
-        registered_include=patients.registered_with_one_practice_between(
+        registered_exclude=patients.registered_with_one_practice_between(
             start_date=end_date_minus_3m,
             end_date=end_date,
             return_expectations={"incidence": 0.1}
