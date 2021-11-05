@@ -20,7 +20,7 @@ def calculate_imd_group(df, disease_column, rate_column):
     """
     
     imd_column = pd.to_numeric(df["imd"])
-    df["imd"] = pd.qcut(imd_column, q=5,duplicates="drop", labels=['Most deprived', '2', '3', '4', 'Least deprived'])   
+    df["imd"] = pd.qcut(imd_column, q=5,duplicates="drop", labels=['1 - Most deprived', '2', '3', '4', '5 - Least deprived'])   
     df_rate = df.groupby(by=["date", "imd"])[[rate_column]].mean().reset_index()
     df_population = df.groupby(by=["date", "imd"])[[disease_column, "population"]].sum().reset_index()
     df_merged = df_rate.merge(df_population, on=["date", "imd"], how="inner")

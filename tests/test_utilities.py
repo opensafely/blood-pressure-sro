@@ -79,7 +79,7 @@ def test_calculate_imd_group(imd_measure_table_from_csv):
     
     exp = pandas.DataFrame(
         {
-            "imd": pandas.Categorical(['Most deprived', '2', '3', '4', 'Least deprived', 'Most deprived', '2', '3', '4', 'Least deprived'], ordered=True).reorder_categories(['Most deprived', '2', '3', '4', 'Least deprived']),
+            "imd": pandas.Categorical(['1 - Most deprived', '2', '3', '4', '5 - Least deprived', '1 - Most deprived', '2', '3', '4', '5 - Least deprived'], ordered=True).reorder_categories(['1 - Most deprived', '2', '3', '4', '5 - Least deprived']),
             "event": pandas.Series([0, 1, 1, 0, 1, 0, 1, 1, 0, 1]),
             "population": pandas.Series([1, 1, 1, 1, 1, 1, 1, 1, 1, 1]),
             "value": pandas.Series([0, 1, 1, 0, 1, 0, 1, 1, 0, 1]),

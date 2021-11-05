@@ -1,26 +1,23 @@
-
 # Import functions
 import json
 import pandas as pd
 
 from cohortextractor import (
-    StudyDefinition, 
-    patients, 
-    codelist, 
+    StudyDefinition,
+    patients,
+    codelist,
     Measure
 )
 
 # Import codelists
-from codelists import codelist, ld_codes, nhse_care_homes_codes
+from codelists import codelist, ld_codes, nhse_care_homes_codes, bp_dec_codes
 
-from config import start_date, end_date, codelist_path, demographics
+from config import start_date, end_date, start_date_minus_5y, end_date_minus_3m, codelist_path, demographics
 
 codelist_df = pd.read_csv(codelist_path)
 codelist_expectation_codes = codelist_df['code'].unique()
 
-
-# Specifiy study defeinition
-
+# Specifiy study definition
 study = StudyDefinition(
     index_date=start_date,
     # Configure the expectations framework
@@ -29,13 +26,25 @@ study = StudyDefinition(
         "rate": "exponential_increase",
         "incidence": 0.1,
     },
-    
+    # Define population parameters and denominator rules
     population=patients.satisfying(
         """
+        # Define general population parameters
         registered AND
         (NOT died) AND
-        (sex = 'F' OR sex='M') AND
-        (age_band != 'missing')
+        (sex = 'F' OR sex = 'M') AND
+
+        # Denominator Rule Number 1
+        (age >= 45) AND
+        
+        # Denominator Rule Number 2
+        # This rule doesnt exlude any patients
+        
+        # Denominator Rule Number 3
+        (bp_declined = 0) AND
+        
+        # Denominator Rule Number 4
+        (registered_include)
         """,
 
         registered=patients.registered_as_of(
@@ -48,6 +57,22 @@ study = StudyDefinition(
             returning="binary_flag",
             return_expectations={"incidence": 0.1}
         ),
+
+        # Define variable for denominator rule number 3
+        bp_declined=patients.with_these_clinical_events(
+            codelist=bp_dec_codes,
+            returning="binary_flag"
+        ),
+        # Define variable for denominator rule number 4
+        # Reject patients passed to this rule who registered with the GP practice in the 3 month period 
+        # leading up to and including the payment period end date. 
+        # Select the remaining patients.
+        registered_include=patients.registered_with_one_practice_between(
+            start_date=end_date_minus_3m,
+            end_date=end_date,
+            return_expectations={"incidence": 0.1}
+        )
+
     ),
 
     age=patients.age_as_of(
@@ -85,9 +110,7 @@ study = StudyDefinition(
                 }
             },
         },
-
     ),
-
 
     sex=patients.sex(
         return_expectations={
@@ -116,7 +139,7 @@ study = StudyDefinition(
             "London": 0.2,
             "South East": 0.2, }}}
     ),
-    
+
     imd=patients.address_as_of(
         "index_date",
         returning="index_of_multiple_deprivation",
@@ -133,33 +156,35 @@ study = StudyDefinition(
         returning="binary_flag",
         return_expectations={"incidence": 0.01, },
     ),
-    
+
     care_home_status=patients.with_these_clinical_events(
         nhse_care_homes_codes,
         returning="binary_flag",
         on_or_before="index_date",
         return_expectations={"incidence": 0.2}
     ),
-
-
-    event =patients.with_these_clinical_events(
-        codelist=codelist,
-        between=["index_date", "last_day_of_month(index_date)"],
+    
+    # Numerator Rule Number 1
+    # Select patients from the denominator who had their blood pressure recorded in the 5 year period 
+    # leading up to and including the payment period end date. 
+    # Reject the remaining patients.
+    event=patients.with_these_clinical_events(
+        codelist=codelist,     
+        between=[start_date_minus_5y, end_date],
         returning="binary_flag",
         return_expectations={"incidence": 0.5}
     ),
 
     event_code=patients.with_these_clinical_events(
         codelist=codelist,
-        between=["index_date", "last_day_of_month(index_date)"],
+        between=[start_date_minus_5y, end_date],
         returning="code",
         return_expectations={"category": {
             "ratios": {x: 1/len(codelist_expectation_codes) for x in codelist_expectation_codes}}, }
     ),
-    
 )
 
-# Create default measures
+# # Create default measures
 measures = [
 
     Measure(
@@ -178,21 +203,18 @@ measures = [
         small_number_suppression=False
     ),
 
-
-
 ]
 
-
-#Add demographics measures
+# Add demographics measures
 
 for d in demographics:
 
     if d == 'imd':
         apply_suppression = False
-    
+
     else:
         apply_suppression = True
-    
+
     m = Measure(
         id=f'{d}_rate',
         numerator="event",
@@ -200,7 +222,5 @@ for d in demographics:
         group_by=[d],
         small_number_suppression=apply_suppression
     )
-    
-    measures.append(m)
 
-    
+    measures.append(m)

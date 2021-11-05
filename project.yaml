@@ -7,7 +7,7 @@ actions:
 
   
   generate_study_population:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition --index-date-range "2021-06-01 to 2021-12-01 by month" --output-dir=output
+    run: cohortextractor:latest generate_cohort --study-definition study_definition --index-date-range "2019-09-01 to 2022-03-31 by month" --output-dir=output
     outputs:
       highly_sensitive:
         cohort: output/input_*.csv
@@ -26,7 +26,7 @@ actions:
         cohort: output/input*.csv
 
   generate_study_population_practice_count:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition_practice_count --index-date-range "2021-06-01 to 2021-12-01 by month" --output-dir=output
+    run: cohortextractor:latest generate_cohort --study-definition study_definition_practice_count --index-date-range "2019-09-01 to 2022-03-31 by month" --output-dir=output
     outputs:
       highly_sensitive:
         cohort: output/input_practice_count_*.csv
