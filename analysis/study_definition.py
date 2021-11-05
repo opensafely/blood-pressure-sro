@@ -17,8 +17,7 @@ from config import start_date, end_date, start_date_minus_5y, end_date_minus_3m,
 codelist_df = pd.read_csv(codelist_path)
 codelist_expectation_codes = codelist_df['code'].unique()
 
-# Specifiy study defeinition
-
+# Specifiy study definition
 study = StudyDefinition(
     index_date=start_date,
     # Configure the expectations framework
@@ -27,7 +26,7 @@ study = StudyDefinition(
         "rate": "exponential_increase",
         "incidence": 0.1,
     },
-
+    # Define population parameters and denominator rules
     population=patients.satisfying(
         """
         # Define general population parameters
@@ -42,7 +41,7 @@ study = StudyDefinition(
         # This rule doesnt exlude any patients
         
         # Denominator Rule Number 3
-        (bp_declined_dr3 = 0) AND
+        (bp_declined = 0) AND
         
         # Denominator Rule Number 4
         (registered_include)
@@ -59,11 +58,15 @@ study = StudyDefinition(
             return_expectations={"incidence": 0.1}
         ),
 
-        bp_declined_dr3=patients.with_these_clinical_events(
+        # Define variable for denominator rule number 3
+        bp_declined=patients.with_these_clinical_events(
             codelist=bp_dec_codes,
             returning="binary_flag"
         ),
-
+        # Define variable for denominator rule number 4
+        # Reject patients passed to this rule who registered with the GP practice in the 3 month period 
+        # leading up to and including the payment period end date. 
+        # Select the remaining patients.
         registered_include=patients.registered_with_one_practice_between(
             start_date=end_date_minus_3m,
             end_date=end_date,
@@ -160,10 +163,13 @@ study = StudyDefinition(
         on_or_before="index_date",
         return_expectations={"incidence": 0.2}
     ),
-
+    
+    # Numerator Rule Number 1
+    # Select patients from the denominator who had their blood pressure recorded in the 5 year period 
+    # leading up to and including the payment period end date. 
+    # Reject the remaining patients.
     event=patients.with_these_clinical_events(
-        codelist=codelist,
-        # Numerator Rule Number 1 
+        codelist=codelist,     
         between=[start_date_minus_5y, end_date],
         returning="binary_flag",
         return_expectations={"incidence": 0.5}
