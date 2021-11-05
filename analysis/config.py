@@ -7,10 +7,10 @@ start_date = "2021-04-01"
 # study end date. should match date in project.yaml
 end_date = "2022-03-31"
 
-# Defining a function for fun, not happy with this but it does the job
-# Defninetely need some help with this python stuff!
+# Define a function for fun, I'm not really happy with this but it works
+# Definitely need some help improving this, need to learn how to write robust funs in py
 def calculate_date(date, months):
-    """Add or substract months to date.
+    """Add or substract months to a date in "YYYY-MM-DD" format.
     
     Args:
         date: date as string in YYYY-MM-DD format.
