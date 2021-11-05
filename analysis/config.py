@@ -2,7 +2,7 @@ from dateutil.relativedelta import relativedelta
 from datetime import date, datetime
 
 # study start date. should match date in project.yaml
-start_date = "2021-04-01"
+start_date = "2019-09-01"
 
 # study end date. should match date in project.yaml
 end_date = "2022-03-31"
