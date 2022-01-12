@@ -26,7 +26,18 @@ study = StudyDefinition(
         "rate": "exponential_increase",
         "incidence": 0.1,
     },
-    # Define population parameters and denominator rules
+
+    # Define population parameters and denominator rules for:
+    # Business Rules for Quality and Outcomes Framework (QOF) 2021/22 - Blood pressure
+    
+    # Resources
+    # Web: https://digital.nhs.uk/data-and-information/data-collections-and-data-sets/data-collections/quality-and-outcomes-framework-qof/quality-and-outcome-framework-qof-business-rules/qof-business-rules-v46.0-2021-2022-baseline-release
+    # Zip file: https://nhs-prod.global.ssl.fastly.net/binaries/content/assets/website-assets/data-and-information/data-collections/qof/qof_v46_tracked_changes_accepted.zip
+    # Reference document: Blood_Pressure_v46.0.docx
+
+    # Indicator ID: BP002
+    # Description: The percentage of patients aged 45 or over who have a record of blood pressure in the preceding 5 years.
+
     population=patients.satisfying(
         """
         # Define general population parameters
@@ -35,15 +46,19 @@ study = StudyDefinition(
         (sex = 'F' OR sex = 'M') AND
 
         # Denominator Rule Number 1
+        # Description: Reject patients from the specified population who are aged less than 45 years old. 
         (age >= 45) AND
         
         # Denominator Rule Number 2
-        # This rule doesnt exlude any patients
+        # Description: Select patients passed to this rule who had their blood pressure recorded in the 5 year period leading up to and including the payment period end date. 
+        # Note: This rule doesnt exlude any patients
         
         # Denominator Rule Number 3
+        # Description: Reject patients passed to this rule chose not to have their blood pressure recorded in the 5 year period leading up to and including the payment period end date. 
         (bp_declined = 0) AND
         
         # Denominator Rule Number 4
+        # Description: Reject patients passed to this rule who registered with the GP practice in the 3 month period leading up to and including the payment period end date. 
         (registered_include)
         """,
 
@@ -63,6 +78,7 @@ study = StudyDefinition(
             codelist=bp_dec_codes,
             returning="binary_flag"
         ),
+
         # Define variable for denominator rule number 4
         # Reject patients passed to this rule who registered with the GP practice in the 3 month period 
         # leading up to and including the payment period end date. 
@@ -87,12 +103,12 @@ study = StudyDefinition(
         {
             "missing": "DEFAULT",
             "0-19": """ age >= 0 AND age < 20""",
-            "20-29": """ age >=  20 AND age < 30""",
-            "30-39": """ age >=  30 AND age < 40""",
-            "40-49": """ age >=  40 AND age < 50""",
-            "50-59": """ age >=  50 AND age < 60""",
-            "60-69": """ age >=  60 AND age < 70""",
-            "70-79": """ age >=  70 AND age < 80""",
+            "20-29": """ age >= 20 AND age < 30""",
+            "30-39": """ age >= 30 AND age < 40""",
+            "40-49": """ age >= 40 AND age < 50""",
+            "50-59": """ age >= 50 AND age < 60""",
+            "60-69": """ age >= 60 AND age < 70""",
+            "70-79": """ age >= 70 AND age < 80""",
             "80+": """ age >=  80 AND age < 120""",
         },
         return_expectations={
@@ -165,9 +181,8 @@ study = StudyDefinition(
     ),
     
     # Numerator Rule Number 1
-    # Select patients from the denominator who had their blood pressure recorded in the 5 year period 
-    # leading up to and including the payment period end date. 
-    # Reject the remaining patients.
+    # Description: Select patients from the denominator who had their blood pressure recorded in the 5 year period 
+    # leading up to and including the payment period end date.
     event=patients.with_these_clinical_events(
         codelist=codelist,     
         between=[start_date_minus_5y, end_date],
@@ -184,7 +199,7 @@ study = StudyDefinition(
     ),
 )
 
-# # Create default measures
+# Create default measures
 measures = [
 
     Measure(
@@ -206,7 +221,6 @@ measures = [
 ]
 
 # Add demographics measures
-
 for d in demographics:
 
     if d == 'imd':

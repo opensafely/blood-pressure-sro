@@ -37,7 +37,6 @@ study = StudyDefinition(
             "incidence": 0.4,
             },
     ),
-    
 
     ethnicity = patients.categorised_as(
             {"0": "DEFAULT",
@@ -52,6 +51,5 @@ study = StudyDefinition(
             "incidence": 0.4,
             },
     ),
-
 
 )
