@@ -75,6 +75,7 @@ study = StudyDefinition(
 
         # Define variable for denominator rule number 3
         bp_declined=patients.with_these_clinical_events(
+            between=[start_date_minus_5y, end_date],
             codelist=bp_dec_codes,
             returning="binary_flag"
         ),
