@@ -19,7 +19,7 @@ codelist_expectation_codes = codelist_df['code'].unique()
 
 # Specifiy study definition
 study = StudyDefinition(
-    index_date=start_date,
+    index_date=end_date,
     # Configure the expectations framework
     default_expectations={
         "date": {"earliest": start_date, "latest": end_date},
@@ -29,7 +29,7 @@ study = StudyDefinition(
 
     # Define population parameters and denominator rules for:
     # Business Rules for Quality and Outcomes Framework (QOF) 2021/22 - Blood pressure
-    
+
     # Resources
     # Web: https://digital.nhs.uk/data-and-information/data-collections-and-data-sets/data-collections/quality-and-outcomes-framework-qof/quality-and-outcome-framework-qof-business-rules/qof-business-rules-v46.0-2021-2022-baseline-release
     # Zip file: https://nhs-prod.global.ssl.fastly.net/binaries/content/assets/website-assets/data-and-information/data-collections/qof/qof_v46_tracked_changes_accepted.zip
@@ -75,13 +75,15 @@ study = StudyDefinition(
 
         # Define variable for denominator rule number 3
         bp_declined=patients.with_these_clinical_events(
+            between=["first_day_of_month(index_date) - 5 years",
+                     "last_day_of_month(index_date)"],
             codelist=bp_dec_codes,
             returning="binary_flag"
         ),
 
         # Define variable for denominator rule number 4
-        # Reject patients passed to this rule who registered with the GP practice in the 3 month period 
-        # leading up to and including the payment period end date. 
+        # Reject patients passed to this rule who registered with the GP practice in the 3 month period
+        # leading up to and including the payment period end date.
         # Select the remaining patients.
         registered_include=patients.registered_with_one_practice_between(
             start_date=end_date_minus_3m,
@@ -179,20 +181,22 @@ study = StudyDefinition(
         on_or_before="index_date",
         return_expectations={"incidence": 0.2}
     ),
-    
+
     # Numerator Rule Number 1
-    # Description: Select patients from the denominator who had their blood pressure recorded in the 5 year period 
+    # Description: Select patients from the denominator who had their blood pressure recorded in the 5 year period
     # leading up to and including the payment period end date.
     event=patients.with_these_clinical_events(
-        codelist=codelist,     
-        between=[start_date_minus_5y, end_date],
+        codelist=codelist,
+        between=["first_day_of_month(index_date) - 5 years",
+                 "last_day_of_month(index_date)"],
         returning="binary_flag",
         return_expectations={"incidence": 0.5}
     ),
 
     event_code=patients.with_these_clinical_events(
         codelist=codelist,
-        between=[start_date_minus_5y, end_date],
+        between=["first_day_of_month(index_date) - 5 years",
+                 "last_day_of_month(index_date)"],
         returning="code",
         return_expectations={"category": {
             "ratios": {x: 1/len(codelist_expectation_codes) for x in codelist_expectation_codes}}, }
