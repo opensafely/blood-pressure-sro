@@ -6,5 +6,4 @@ __pycache__
 output/*
 metadata/*
 *.ipynb_checkpoints
-analysis/SRO_Notebook.ipynb
 .vscode/settings.json

@@ -47,15 +47,9 @@ actions:
           plots: output/plot_*.png
           decile_chart: output/decile_chart.png
   
-  create_notebook:
-    run: python:latest python analysis/create_notebook.py
-    outputs:
-      moderately_sensitive:
-        notebook: analysis/SRO_Notebook.ipynb
-
   generate_notebook:
     run: jupyter:latest jupyter nbconvert /workspace/analysis/SRO_Notebook.ipynb --execute --to html --output-dir=/workspace/output --ExecutePreprocessor.timeout=86400 --no-input
-    needs: [create_notebook, calculate_rates, generate_study_population_practice_count]
+    needs: [calculate_rates, generate_study_population_practice_count]
     outputs:
       moderately_sensitive:
         notebook: output/SRO_Notebook.html
