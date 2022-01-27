@@ -52,7 +52,7 @@ for key, value in measures_dict.items():
     elif key =='learning_disability_rate':
         df = convert_binary(df, 'learning_disability', 'Record of learning disability', 'No record of learning disability')
 
-    if key == "age_band":
+    if key == "age_band_rate":
         df = df[df["age_band"] != "missing"]
 
     # get total population rate
