@@ -27,6 +27,19 @@ def calculate_imd_group(df, disease_column, rate_column):
     
     return df_merged[['imd', disease_column, 'population', rate_column, 'date']]
 
+def custom_round(x, base=5):
+    """
+    Rounds the input x to the nearest `base`
+
+    Args:
+        x: integer
+        base: integer speifying the value used for rounding `x`
+    
+    Returns:
+        Integer rounded to the nearest `base` (default 5)
+    """
+    return int(base * round(float(x) / base))
+
 def redact_small_numbers(df, n, numerator, denominator, rate_column):
     """Takes counts df as input and suppresses low numbers.  Sequentially redacts
     low numbers from numerator and denominator until count of redcted values >=n.
@@ -236,7 +249,8 @@ def plot_measures(df, filename, title, column_to_plot, category=False, y_label='
 
     plt.ylabel(y_label)
     plt.xlabel('Date')
-    plt.xticks(rotation='vertical')
+    plt.xticks()
+    
     plt.title(title)
 
     if category:

@@ -11,7 +11,7 @@ from study_definition import measures
 BASE_DIR = Path(__file__).parents[1]
 OUTPUT_DIR = BASE_DIR / "output"
 
-#Add demographics measures
+# Add demographics measures
 
 for d in demographics:
  
@@ -52,6 +52,8 @@ for key, value in measures_dict.items():
     elif key =='learning_disability_rate':
         df = convert_binary(df, 'learning_disability', 'Record of learning disability', 'No record of learning disability')
 
+    if key == "age_band_rate":
+        df = df[df["age_band"] != "missing"]
 
     # get total population rate
     if value.id=='practice_rate':
