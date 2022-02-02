@@ -48,7 +48,7 @@ actions:
           decile_chart: output/decile_chart.png
   
   generate_notebook:
-    run: jupyter:latest jupyter nbconvert /workspace/analysis/SRO_Notebook.ipynb --execute --to html --output-dir=/workspace/output --ExecutePreprocessor.timeout=86400 --no-input
+    run: jupyter:latest jupyter nbconvert /workspace/analysis/qof_notebook.ipynb --execute --to html --output-dir=/workspace/output --ExecutePreprocessor.timeout=86400 --no-input
     needs: [calculate_rates, generate_study_population_practice_count]
     outputs:
       moderately_sensitive:
