@@ -64,7 +64,7 @@ for key, value in measures_dict.items():
         charts.deciles_chart(
         df,
         period_column='date',
-        column='event',
+        column='rate',
         title='Decile Chart',
         ylabel='rate per 1000',
         show_outer_percentiles=False,
