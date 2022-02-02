@@ -52,7 +52,7 @@ actions:
     needs: [calculate_rates, generate_study_population_practice_count]
     outputs:
       moderately_sensitive:
-        notebook: output/SRO_Notebook.html
+        notebook: output/qof_notebook.html
 
   run_tests:
     run: python:latest python -m pytest --junit-xml=output/pytest.xml --verbose
