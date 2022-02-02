@@ -54,6 +54,7 @@ for key, value in measures_dict.items():
 
     if key == "age_band_rate":
         df = df[df["age_band"] != "missing"]
+        df = redact_small_numbers(df, 5, value.numerator, value.denominator, 'rate')
 
     # get total population rate
     if value.id=='practice_rate':

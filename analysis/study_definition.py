@@ -117,14 +117,14 @@ study = StudyDefinition(
             "rate": "universal",
             "category": {
                 "ratios": {
-                    "0-19": 0.125,
-                    "20-29": 0.125,
-                    "30-39": 0.125,
-                    "40-49": 0.125,
-                    "50-59": 0.125,
-                    "60-69": 0.125,
-                    "70-79": 0.125,
-                    "80+": 0.124,
+                    "0-19": 0,
+                    "20-29": 0,
+                    "30-39": 0,
+                    "40-49": 0.349,
+                    "50-59": 0.30,
+                    "60-69": 0.20,
+                    "70-79": 0.10,
+                    "80+": 0.05,
                     "missing": 0.001,
                     }
             },
@@ -228,7 +228,7 @@ measures = [
 # Add demographics measures
 for d in demographics:
 
-    if d == 'imd':
+    if d in ['imd', 'age_band']:
         apply_suppression = False
 
     else:
