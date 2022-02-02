@@ -31,7 +31,8 @@ end_date_minus_3m = calculate_date(date = end_date, months = -3)
 demographics = ["sex", "age_band", "region", "imd", "ethnicity", "learning_disability", "care_home_status"]
 
 #name of measure
-marker = "Blood pressure targets in the Quality and Outcomes Framework (QOF)"
+marker = "Blood pressure targets in the QOF"
+qof_measure_marker = "BP002"
 
 # Codelist path
 codelist_path = "codelists/nhsd-primary-care-domain-refsets-bp_cod.csv"
