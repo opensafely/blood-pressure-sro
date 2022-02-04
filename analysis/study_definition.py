@@ -94,7 +94,7 @@ study = StudyDefinition(
     ),
 
     age=patients.age_as_of(
-        "index_date",
+        "last_day_of_nhs_financial_year(index_date)",
         return_expectations={
             "rate": "universal",
             "int": {"distribution": "population_ages"},
@@ -186,6 +186,7 @@ study = StudyDefinition(
     # Numerator Rule Number 1
     # Description: Select patients from the denominator who had their blood pressure recorded in the 5 year period
     # leading up to and including the payment period end date.
+    # NOTE: Binary because we want to know who had a reading of bp
     event=patients.with_these_clinical_events(
         codelist=codelist,
         between=["first_day_of_month(index_date) - 5 years",
@@ -194,6 +195,7 @@ study = StudyDefinition(
         return_expectations={"incidence": 0.5}
     ),
 
+    # NOTE: This gives us information about which code from the codelist a px had
     event_code=patients.with_these_clinical_events(
         codelist=codelist,
         between=["first_day_of_month(index_date) - 5 years",
