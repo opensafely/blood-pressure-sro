@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+# import matplotlib.dates as mdates
 import os
 from pathlib import Path
 
@@ -139,6 +140,23 @@ def calculate_rate(df, numerator, denominator, rate_per=1000):
     df['rate'] = rate
     
     return df
+
+def calculate_pct(df, numerator, denominator):
+    """Creates a percentage column for a dataframe with a numerator and denominator column.
+    
+    Args:
+        df: measures dataframe
+        numerator: numerator for rate
+        denominator: denominator for rate
+    
+    Returns:
+        Input dataframe with additional rate column
+    """
+
+    rate = df[numerator] / df[denominator]
+    df['rate'] = rate
+    
+    return df
         
 def drop_irrelevant_practices(df, practice_col):
     """Drops irrelevant practices from the given measure table.
@@ -177,7 +195,6 @@ def create_child_table(
         .sort_values("Events", ascending=False)
     )
 
-    
     event_counts["Events (thousands)"] = event_counts["Events"] / 1000
        
     # Gets the human-friendly description of the code for the given row
@@ -189,7 +206,6 @@ def create_child_table(
         event_counts.set_index(code_column).join(code_df).reset_index()
     )
 
-    
     # Cast the code to an integer.
     event_counts[code_column] = event_counts[code_column].astype(int)
     
@@ -203,7 +219,6 @@ def get_number_practices(df):
         df: A measure table.
     """
     return len(df.practice.unique())
-
 
 def get_percentage_practices(measure_table):
     """Gets the percentage of practices in the given measure table.
@@ -252,6 +267,15 @@ def plot_measures(df, filename, title, column_to_plot, category=False, y_label='
     plt.xticks()
     
     plt.title(title)
+    plt.ylim(bottom = 0)
+
+    plt.rc('font', size = 14)
+    plt.rc('axes', titlesize = 14)
+    plt.rc('axes', labelsize = 14)
+    plt.rc('xtick', labelsize = 14)
+    plt.rc('ytick', labelsize = 14)
+    plt.rc('legend', fontsize = 14)
+    plt.rc('figure', titlesize = 14)
 
     if category:
         plt.legend(df[category].unique(), bbox_to_anchor=(
