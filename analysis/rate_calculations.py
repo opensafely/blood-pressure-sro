@@ -40,7 +40,7 @@ for key, value in measures_dict.items():
     if key == "ethnicity_rate":
         df = convert_ethnicity(df)
         
-    df = calculate_rate(df, numerator=value.numerator, denominator=value.denominator, rate_per=1000)
+    df = calculate_rate(df, numerator=value.numerator, denominator=value.denominator, rate_per=1)
     
     if key == "imd_rate":
         df = calculate_imd_group(df, value.numerator, 'rate')
@@ -73,7 +73,7 @@ for key, value in measures_dict.items():
         ).savefig('output/decile_chart.png', bbox_inches='tight')  
         
         df_total = df.groupby(by='date')[[value.numerator, value.denominator]].sum().reset_index()
-        df_total = calculate_rate(df_total, numerator=value.numerator, denominator=value.denominator, rate_per=1000)
+        df_total = calculate_rate(df_total, numerator=value.numerator, denominator=value.denominator, rate_per=1)
 
         plot_measures(df_total, 
             filename='plot_total.png', 

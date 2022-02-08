@@ -241,7 +241,7 @@ def get_percentage_practices(measure_table):
 
     return np.round((num_practices_in_study / num_practices_total) * 100, 2)
 
-def plot_measures(df, filename, title, column_to_plot, category=False, y_label='Rate per 1000'):
+def plot_measures(df, filename, title, column_to_plot, category=False, y_label='Percentage of achievement'):
     """Produce time series plot from measures table.  One line is plotted for each sub
     category within the category column.
 
@@ -264,10 +264,10 @@ def plot_measures(df, filename, title, column_to_plot, category=False, y_label='
 
     plt.ylabel(y_label)
     plt.xlabel('Date')
-    plt.xticks()
+    plt.xticks(rotation='vertical')
     
     plt.title(title)
-    plt.ylim(bottom = 0)
+    plt.ylim(bottom = 0, top = 1)
 
     plt.rc('font', size = 14)
     plt.rc('axes', titlesize = 14)
