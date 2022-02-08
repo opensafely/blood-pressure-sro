@@ -67,7 +67,7 @@ for key, value in measures_dict.items():
         period_column='date',
         column='rate',
         title='Decile Chart',
-        ylabel='rate per 1000',
+        ylabel='Rate per 1000',
         show_outer_percentiles=False,
         show_legend=True,
         ).savefig('output/decile_chart.png', bbox_inches='tight')  
@@ -80,7 +80,7 @@ for key, value in measures_dict.items():
             title='Population Rate', 
             column_to_plot='rate', 
             category=None, 
-            y_label='Rate per 1000'
+            y_label='Achievement in %'
             )
 
         df_total.to_csv(os.path.join(OUTPUT_DIR, 'rate_table_total.csv'), index=False)
@@ -97,7 +97,7 @@ for key, value in measures_dict.items():
             title=f'Breakdown of {qof_measure_marker} by {value.group_by[0]}', 
             column_to_plot='rate', 
             category=value.group_by[0], 
-            y_label='Rate per 1000'
+            y_label='Achievement in %'
             )
 
         df.to_csv(os.path.join(OUTPUT_DIR, f'rate_table_{value.group_by[0]}.csv'), index=False)
