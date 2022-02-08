@@ -268,6 +268,7 @@ def plot_measures(df, filename, title, column_to_plot, category=False, y_label='
     
     plt.title(title)
     plt.ylim(bottom = 0, top = 1)
+    plt.gca().set_yticklabels(['{:.0f}%'.format(x*100) for x in plt.gca().get_yticks()]) 
 
     plt.rc('font', size = 14)
     plt.rc('axes', titlesize = 14)

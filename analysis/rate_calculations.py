@@ -24,13 +24,10 @@ for d in demographics:
     
     measures.append(m)
 
-
-
 measures_dict = {}
 
 for m in measures:
     measures_dict[m.id] = m
-
 
 for key, value in measures_dict.items():
     
@@ -67,7 +64,7 @@ for key, value in measures_dict.items():
         period_column='date',
         column='rate',
         title='Decile Chart',
-        ylabel='Rate per 1000',
+        ylabel='% of practices',
         show_outer_percentiles=False,
         show_legend=True,
         ).savefig('output/decile_chart.png', bbox_inches='tight')  
@@ -80,7 +77,7 @@ for key, value in measures_dict.items():
             title='Population Rate', 
             column_to_plot='rate', 
             category=None, 
-            y_label='Achievement in %'
+            y_label='Achievement'
             )
 
         df_total.to_csv(os.path.join(OUTPUT_DIR, 'rate_table_total.csv'), index=False)
@@ -97,7 +94,7 @@ for key, value in measures_dict.items():
             title=f'Breakdown of {qof_measure_marker} by {value.group_by[0]}', 
             column_to_plot='rate', 
             category=value.group_by[0], 
-            y_label='Achievement in %'
+            y_label='Achievement'
             )
 
         df.to_csv(os.path.join(OUTPUT_DIR, f'rate_table_{value.group_by[0]}.csv'), index=False)
