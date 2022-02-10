@@ -70,7 +70,7 @@ for key, value in measures_dict.items():
         )
 
         bp002_decile_chart.gcf().set_size_inches(15,8)
-        bp002_decile_chart.gca().set_yticklabels(['{:.0f}%'.format(x*100) for x in bp002_decile_chart.gca().get_yticks()])
+        # bp002_decile_chart.gca().set_yticklabels(['{:.0f}%'.format(x*100) for x in bp002_decile_chart.gca().get_yticks()])
         # bp002_decile_chart.gca().set_xticklabels(bp002_decile_chart.gca().get_yticks(), rotation='horizontal')
         # bp002_decile_chart.gca().xaxis.set_major_formatter(
         #     mdates.ConciseDateFormatter(bp002_decile_chart.gca().xaxis.get_major_locator()))
