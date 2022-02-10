@@ -59,25 +59,41 @@ for key, value in measures_dict.items():
         df = drop_irrelevant_practices(df, 'practice')
         df.to_csv(os.path.join(OUTPUT_DIR, f'rate_table_{value.group_by[0]}.csv'), index=False)
 
-        charts.deciles_chart(
-        df,
-        period_column='date',
-        column='rate',
-        title='Decile Chart',
-        ylabel='% of practices',
-        show_outer_percentiles=False,
-        show_legend=True,
-        ).savefig('output/decile_chart.png', bbox_inches='tight')  
+        bp002_decile_chart = charts.deciles_chart(
+            df,
+            period_column='date',
+            column='rate',
+            title=None,
+            ylabel=None,
+            show_outer_percentiles=False,
+            show_legend=True,
+        )
+
+        bp002_decile_chart.gcf().set_size_inches(15,8)
+        bp002_decile_chart.gca().set_yticklabels(['{:.0f}%'.format(x*100) for x in bp002_decile_chart.gca().get_yticks()])
+        # bp002_decile_chart.gca().set_xticklabels(bp002_decile_chart.gca().get_yticks(), rotation='horizontal')
+        # bp002_decile_chart.gca().xaxis.set_major_formatter(
+        #     mdates.ConciseDateFormatter(bp002_decile_chart.gca().xaxis.get_major_locator()))
+
+        # bp002_decile_chart.rc('font', size = 16)
+        # bp002_decile_chart.rc('axes', titlesize = 16)
+        # bp002_decile_chart.rc('axes', labelsize = 16)
+        # bp002_decile_chart.rc('xtick', labelsize = 16)
+        # bp002_decile_chart.rc('ytick', labelsize = 16)
+        # bp002_decile_chart.rc('legend', fontsize = 16)
+        # bp002_decile_chart.rc('figure', titlesize = 16)
+
+        bp002_decile_chart.savefig('output/decile_chart.png', bbox_inches='tight')  
         
         df_total = df.groupby(by='date')[[value.numerator, value.denominator]].sum().reset_index()
         df_total = calculate_rate(df_total, numerator=value.numerator, denominator=value.denominator, rate_per=1)
 
         plot_measures(df_total, 
             filename='plot_total.png', 
-            title='Population Rate', 
+            title=None, 
             column_to_plot='rate', 
             category=None, 
-            y_label='Achievement'
+            y_label=None,
             )
 
         df_total.to_csv(os.path.join(OUTPUT_DIR, 'rate_table_total.csv'), index=False)
@@ -91,10 +107,11 @@ for key, value in measures_dict.items():
     else:
         plot_measures(df, 
             filename=f'plot_{value.group_by[0]}.png', 
-            title=f'Breakdown of {qof_measure_marker} by {value.group_by[0]}', 
+            title=None, 
+            # title=f'Breakdown of {qof_measure_marker} by {value.group_by[0]}', 
             column_to_plot='rate', 
             category=value.group_by[0], 
-            y_label='Achievement'
+            y_label=None,
             )
 
         df.to_csv(os.path.join(OUTPUT_DIR, f'rate_table_{value.group_by[0]}.csv'), index=False)

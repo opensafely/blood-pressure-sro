@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-# import matplotlib.dates as mdates
+import matplotlib.dates as mdates
 import os
 from pathlib import Path
 
@@ -263,20 +263,23 @@ def plot_measures(df, filename, title, column_to_plot, category=False, y_label='
         plt.plot(df['date'], df[column_to_plot], marker='o')
 
     plt.ylabel(y_label)
-    plt.xlabel('Date')
-    plt.xticks(rotation='vertical')
+    plt.xlabel(None)
+    plt.xticks(rotation='horizontal')
     
     plt.title(title)
     plt.ylim(bottom = 0, top = 1)
     plt.gca().set_yticklabels(['{:.0f}%'.format(x*100) for x in plt.gca().get_yticks()]) 
 
-    plt.rc('font', size = 14)
-    plt.rc('axes', titlesize = 14)
-    plt.rc('axes', labelsize = 14)
-    plt.rc('xtick', labelsize = 14)
-    plt.rc('ytick', labelsize = 14)
-    plt.rc('legend', fontsize = 14)
-    plt.rc('figure', titlesize = 14)
+    plt.rc('font', size = 16)
+    plt.rc('axes', titlesize = 16)
+    plt.rc('axes', labelsize = 16)
+    plt.rc('xtick', labelsize = 16)
+    plt.rc('ytick', labelsize = 16)
+    plt.rc('legend', fontsize = 16)
+    plt.rc('figure', titlesize = 16)
+
+    plt.gca().xaxis.set_major_formatter(
+        mdates.ConciseDateFormatter(plt.gca().xaxis.get_major_locator()))
 
     if category:
         plt.legend(df[category].unique(), bbox_to_anchor=(
