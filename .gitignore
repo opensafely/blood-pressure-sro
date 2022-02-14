@@ -7,3 +7,4 @@ output/*
 metadata/*
 *.ipynb_checkpoints
 .vscode/settings.json
+.DS_Store
