@@ -55,7 +55,7 @@ for key, value in measures_dict.items():
 
     # get total population rate
     if value.id=='practice_rate':
-        
+        df = calculate_rate(df, numerator=value.numerator, denominator=value.denominator, rate_per=1000)
         df = drop_irrelevant_practices(df, 'practice')
         df.to_csv(os.path.join(OUTPUT_DIR, f'rate_table_{value.group_by[0]}.csv'), index=False)
 
@@ -63,8 +63,8 @@ for key, value in measures_dict.items():
             df,
             period_column='date',
             column='rate',
-            title=None,
-            ylabel=None,
+            title='Variation in code use by GP practice',
+            ylabel='rate per 1000',
             show_outer_percentiles=False,
             show_legend=True,
         )
