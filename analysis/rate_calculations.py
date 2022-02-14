@@ -55,7 +55,7 @@ for key, value in measures_dict.items():
 
     # get total population rate
     if value.id=='practice_rate':
-        df = calculate_rate(df, numerator=value.numerator, denominator=value.denominator, rate_per=1000)
+        df = calculate_rate(df, numerator=value.numerator, denominator=value.denominator, rate_per=1)
         df = drop_irrelevant_practices(df, 'practice')
         df.to_csv(os.path.join(OUTPUT_DIR, f'rate_table_{value.group_by[0]}.csv'), index=False)
 
@@ -63,25 +63,25 @@ for key, value in measures_dict.items():
             df,
             period_column='date',
             column='rate',
-            title='Variation in code use by GP practice',
-            ylabel='rate per 1000',
+            title="Variation in percentage of study population with a blood pressure reading across GP practices",
+            ylabel=None,
             show_outer_percentiles=False,
             show_legend=True,
         )
 
         bp002_decile_chart.gcf().set_size_inches(15,8)
-        # bp002_decile_chart.gca().set_yticklabels(['{:.0f}%'.format(x*100) for x in bp002_decile_chart.gca().get_yticks()])
+        bp002_decile_chart.gca().set_yticklabels(['{:.0f}%'.format(x*100) for x in bp002_decile_chart.gca().get_yticks()])
         # bp002_decile_chart.gca().set_xticklabels(bp002_decile_chart.gca().get_yticks(), rotation='horizontal')
         # bp002_decile_chart.gca().xaxis.set_major_formatter(
         #     mdates.ConciseDateFormatter(bp002_decile_chart.gca().xaxis.get_major_locator()))
 
-        # bp002_decile_chart.rc('font', size = 16)
-        # bp002_decile_chart.rc('axes', titlesize = 16)
-        # bp002_decile_chart.rc('axes', labelsize = 16)
-        # bp002_decile_chart.rc('xtick', labelsize = 16)
-        # bp002_decile_chart.rc('ytick', labelsize = 16)
-        # bp002_decile_chart.rc('legend', fontsize = 16)
-        # bp002_decile_chart.rc('figure', titlesize = 16)
+        bp002_decile_chart.rc('font', size = 16)
+        bp002_decile_chart.rc('axes', titlesize = 16)
+        bp002_decile_chart.rc('axes', labelsize = 16)
+        bp002_decile_chart.rc('xtick', labelsize = 16)
+        bp002_decile_chart.rc('ytick', labelsize = 16)
+        bp002_decile_chart.rc('legend', fontsize = 16)
+        bp002_decile_chart.rc('figure', titlesize = 16)
 
         bp002_decile_chart.savefig('output/decile_chart.png', bbox_inches='tight')  
         
