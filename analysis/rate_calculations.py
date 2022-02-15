@@ -63,7 +63,7 @@ for key, value in measures_dict.items():
             df,
             period_column='date',
             column='rate',
-            title="Variation in percentage of study population with a blood pressure reading across GP practices",
+            title=None,
             ylabel=None,
             show_outer_percentiles=False,
             show_legend=True,
