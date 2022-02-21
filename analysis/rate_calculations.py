@@ -52,9 +52,10 @@ for key, value in measures_dict.items():
     elif key == "age_band_rate":
         df = df[df["age_band"] != "missing"]
         df = redact_small_numbers(df, 5, value.numerator, value.denominator, 'rate')
+        df.to_csv(os.path.join(OUTPUT_DIR, f'rate_table_{value.group_by[0]}.csv'), index=False)
 
     # get total population rate
-    if value.id=='practice_rate':
+    if value.id == 'practice_rate':
         df = calculate_rate(df, numerator=value.numerator, denominator=value.denominator, rate_per=1)
         df = drop_irrelevant_practices(df, 'practice')
         df.to_csv(os.path.join(OUTPUT_DIR, f'rate_table_{value.group_by[0]}.csv'), index=False)
