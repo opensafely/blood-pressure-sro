@@ -11,7 +11,7 @@ end_date = "2022-03-31"
 # Definitely need some help improving this, need to learn how to write robust funs in py
 def calculate_date(date, months):
     """Add or substract months to a date in "YYYY-MM-DD" format.
-    
+
     Args:
         date: date as string in YYYY-MM-DD format.
         month: Number of month to add (+) or substract (-)
@@ -20,20 +20,30 @@ def calculate_date(date, months):
         Date as string in YYYY-MM-DD format
     """
 
-    date_calc = datetime.strptime(date, "%Y-%m-%d").date() + relativedelta(months=months)
+    date_calc = datetime.strptime(date, "%Y-%m-%d").date() + relativedelta(
+        months=months
+    )
     return date_calc.strftime("%Y-%m-%d")
 
+
 # Define more date variables needed for this project
-start_date_minus_5y = calculate_date(date = end_date, months = -(5 * 12))
-end_date_minus_3m = calculate_date(date = end_date, months = -3)
+start_date_minus_5y = calculate_date(date=end_date, months=-(5 * 12))
+end_date_minus_3m = calculate_date(date=end_date, months=-3)
 
 # demographic variables by which code use is broken down
-demographics = ["sex", "age_band", "region", "imd", "ethnicity", "learning_disability", "care_home_status"]
+demographics = [
+    "sex",
+    "age_band",
+    "region",
+    "imd",
+    "ethnicity",
+    "learning_disability",
+    "care_home_status",
+]
 
-#name of measure
+# name of measure
 marker = "QOF Blood Pressure targets"
 qof_measure_marker = "BP002"
 
 # Codelist path
 codelist_path = "codelists/nhsd-primary-care-domain-refsets-bp_cod.csv"
-
