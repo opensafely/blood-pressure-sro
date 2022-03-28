@@ -8,6 +8,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).parents[1]
 OUTPUT_DIR = BASE_DIR / "output"
 
+
 def calculate_imd_group(df, disease_column, rate_column):
     """Converts imd column from ordinal to quantiles and groups by these quintiles.
 
@@ -37,6 +38,7 @@ def calculate_imd_group(df, disease_column, rate_column):
 
     return df_merged[["imd", disease_column, "population", rate_column, "date"]]
 
+
 def custom_round(x, base=5):
     """
     Rounds the input x to the nearest `base`
@@ -49,6 +51,7 @@ def custom_round(x, base=5):
         Integer rounded to the nearest `base` (default 5)
     """
     return int(base * round(float(x) / base))
+
 
 def redact_small_numbers(df, n, numerator, denominator, rate_column):
     """Takes counts df as input and suppresses low numbers.  Sequentially redacts
@@ -88,6 +91,7 @@ def redact_small_numbers(df, n, numerator, denominator, rate_column):
 
     return df
 
+
 def convert_ethnicity(df):
     """Converts the ethnicity of a dataframe from int to an understandable string.
 
@@ -110,6 +114,7 @@ def convert_ethnicity(df):
 
     return df
 
+
 def convert_binary(df, binary_column, positive, negative):
     """Converts a column with binary variable codes as 0 and 1 to understandable strings.
 
@@ -126,6 +131,7 @@ def convert_binary(df, binary_column, positive, negative):
     df[binary_column] = df[binary_column].replace(replace_dict)
     return df
 
+
 def drop_missing_demographics(df, demographic):
     """Drops any rows with missing values for a given demographic variable.
 
@@ -137,6 +143,7 @@ def drop_missing_demographics(df, demographic):
         Dataframe with no rows missing demographic variable.
     """
     return df.loc[df[demographic].notnull(), :]
+
 
 def calculate_rate(df, numerator, denominator, rate_per=1000):
     """Creates a rate column for a dataframe with a numerator and denominator column.
@@ -156,6 +163,7 @@ def calculate_rate(df, numerator, denominator, rate_per=1000):
 
     return df
 
+
 def calculate_pct(df, numerator, denominator):
     """Creates a percentage column for a dataframe with a numerator and denominator column.
 
@@ -173,6 +181,7 @@ def calculate_pct(df, numerator, denominator):
 
     return df
 
+
 def drop_irrelevant_practices(df, practice_col):
     """Drops irrelevant practices from the given measure table.
     An irrelevant practice has zero events during the study period.
@@ -184,6 +193,7 @@ def drop_irrelevant_practices(df, practice_col):
     """
     is_relevant = df.groupby(practice_col).value.any()
     return df[df[practice_col].isin(is_relevant[is_relevant == True].index)]
+
 
 def create_child_table(df, code_df, code_column, term_column, nrows=5):
 
@@ -223,12 +233,14 @@ def create_child_table(df, code_df, code_column, term_column, nrows=5):
 
     return event_counts.iloc[:nrows, :]
 
+
 def get_number_practices(df):
     """Gets the number of practices in the given measure table.
     Args:
         df: A measure table.
     """
     return len(df.practice.unique())
+
 
 def get_percentage_practices(measure_table):
     """Gets the percentage of practices in the given measure table.
@@ -250,6 +262,7 @@ def get_percentage_practices(measure_table):
     num_practices_in_study = get_number_practices(measure_table)
 
     return np.round((num_practices_in_study / num_practices_total) * 100, 2)
+
 
 def plot_measures(
     df,
@@ -302,7 +315,7 @@ def plot_measures(
     )
 
     if category:
-        plt.legend(df[category].unique(), bbox_to_anchor=(1.04, 1), loc="upper left")
+        plt.legend(df[category].unique(), loc="lower right")
 
     else:
         pass
