@@ -40,6 +40,9 @@ for key, value in measures_dict.items():
         df, numerator=value.numerator, denominator=value.denominator, rate_per=1
     )
 
+    # Remove unknown ethnicity
+    df = df.query("ethnicity != unknown")
+
     if key == "imd_rate":
         df = calculate_imd_group(df, value.numerator, "rate")
         df = redact_small_numbers(df, 5, value.numerator, value.denominator, "rate")
