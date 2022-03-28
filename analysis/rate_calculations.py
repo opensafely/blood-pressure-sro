@@ -35,13 +35,12 @@ for key, value in measures_dict.items():
 
     if key == "ethnicity_rate":
         df = convert_ethnicity(df)
+            # Remove unknown ethnicity
+        df = df.query("ethnicity != 'unknown'")
 
     df = calculate_rate(
         df, numerator=value.numerator, denominator=value.denominator, rate_per=1
     )
-
-    # Remove unknown ethnicity
-    df = df.query("ethnicity != unknown")
 
     if key == "imd_rate":
         df = calculate_imd_group(df, value.numerator, "rate")
