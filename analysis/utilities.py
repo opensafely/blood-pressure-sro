@@ -287,6 +287,7 @@ def plot_measures(
     column_to_plot,
     category=False,
     y_label="Percentage of achievement",
+    autoscale=True,
     vlines=[]
 ):
     """Produce time series plot from measures table.  One line is plotted for each sub
@@ -314,7 +315,9 @@ def plot_measures(
     plt.xticks(rotation="horizontal")
 
     plt.title(title)
-    plt.ylim(bottom=0, top=1)
+
+    plt.autoscale(enable=autoscale)
+
     plt.gca().set_yticklabels(
         ["{:.0f}%".format(x * 100) for x in plt.gca().get_yticks()]
     )
