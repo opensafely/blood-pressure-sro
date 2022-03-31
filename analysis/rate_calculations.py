@@ -126,6 +126,7 @@ for key, value in measures_dict.items():
             column_to_plot="rate",
             category=None,
             y_label=None,
+            adjust_ylim=False
         )
 
         df_total.to_csv(os.path.join(OUTPUT_DIR, "rate_table_total.csv"), index=False)

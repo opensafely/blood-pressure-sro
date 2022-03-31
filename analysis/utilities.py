@@ -271,6 +271,7 @@ def plot_measures(
     column_to_plot,
     category=False,
     y_label="Percentage of achievement",
+    adjust_ylim=True
 ):
     """Produce time series plot from measures table.  One line is plotted for each sub
     category within the category column.
@@ -297,7 +298,12 @@ def plot_measures(
     plt.xticks(rotation="horizontal")
 
     plt.title(title)
-    plt.ylim(bottom=0, top=1)
+
+    if adjust_ylim:
+        plt.ylim([0, df[column_to_plot].max() * 1.05 if (df[column_to_plot].max() * 1.05) < 1 else 1])
+    else:
+        plt.ylim(bottom=0, top=1)
+
     plt.gca().set_yticklabels(
         ["{:.0f}%".format(x * 100) for x in plt.gca().get_yticks()]
     )
