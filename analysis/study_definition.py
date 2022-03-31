@@ -50,13 +50,15 @@ study = StudyDefinition(
         # Denominator Rule Number 2
         # Description: Select patients passed to this rule who had their blood pressure recorded in the 5 year period leading up to and including the payment period end date. 
         # Note: This rule doesnt exlude any patients
+        event AND
         
         # Denominator Rule Number 3
         # Description: Reject patients passed to this rule chose not to have their blood pressure recorded in the 5 year period leading up to and including the payment period end date. 
-        (bp_declined = 0) AND
+        (NOT bp_declined) AND
         
         # Denominator Rule Number 4
         # Description: Reject patients passed to this rule who registered with the GP practice in the 3 month period leading up to and including the payment period end date. 
+        # This keeps patients that are registered with one practice in the last 3 months
         (registered_include)
         """,
         registered=patients.registered_as_of(
@@ -82,8 +84,8 @@ study = StudyDefinition(
         # leading up to and including the payment period end date.
         # Select the remaining patients.
         registered_include=patients.registered_with_one_practice_between(
-            start_date=end_date_minus_3m,
-            end_date=end_date,
+            start_date="index_date - 3 months",
+            end_date="index_date",
             return_expectations={"incidence": 0.1},
         ),
     ),
@@ -180,6 +182,7 @@ study = StudyDefinition(
     # Description: Select patients from the denominator who had their blood pressure recorded in the 5 year period
     # leading up to and including the payment period end date.
     # NOTE: Binary because we want to know who had a reading of bp
+    # the event codelist is bp_cod
     event=patients.with_these_clinical_events(
         codelist=codelist,
         between=[
