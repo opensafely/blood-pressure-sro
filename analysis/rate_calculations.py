@@ -127,7 +127,7 @@ for key, value in measures_dict.items():
             column_to_plot="rate",
             category=None,
             y_label=None,
-            adjust_ylim=False
+            adjust_ylim=False,
             vlines=vertical_lines
         )
 

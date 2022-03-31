@@ -287,7 +287,7 @@ def plot_measures(
     column_to_plot,
     category=False,
     y_label="Percentage of achievement",
-    adjust_ylim=True
+    adjust_ylim=True,
     vlines=[]
 ):
     """Produce time series plot from measures table.  One line is plotted for each sub
