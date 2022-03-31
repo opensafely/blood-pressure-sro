@@ -90,7 +90,7 @@ study = StudyDefinition(
     # Currently this is not possible, here we are calculating age as of March 1st YYYY
     # because age_as_of uses the first day of the given month to calculate the age
     age=patients.age_as_of(
-        "last_day_of_nhs_financial_year(index_date) + 1 day",
+        "last_day_of_month(index_date) + 1 day",
         return_expectations={
             "rate": "universal",
             "int": {"distribution": "population_ages"},
