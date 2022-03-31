@@ -7,6 +7,11 @@ start_date = "2019-09-01"
 # study end date. should match date in project.yaml
 end_date = "2022-03-31"
 
+# Vertical plot lines for financial year
+# Leave an empty list if no lines needed
+# If a date is out of range of the graph, it will not be visible
+vertical_lines = ["2020-04-01", "2021-04-01"]
+
 # Define a function for fun, I'm not really happy with this but it works
 # Definitely need some help improving this, need to learn how to write robust funs in py
 def calculate_date(date, months):

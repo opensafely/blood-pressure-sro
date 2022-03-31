@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+from dateutil import parser
 import os
 from pathlib import Path
 
@@ -263,6 +264,21 @@ def get_percentage_practices(measure_table):
 
     return np.round((num_practices_in_study / num_practices_total) * 100, 2)
 
+def add_date_lines(plt, vlines):
+    # TODO: Check that it is within the range?
+    for date in vlines:
+        try:
+            plt.vlines(
+                x=[pd.to_datetime(date)],
+                ymin=0,
+                ymax=100,
+                colors="orange",
+                ls="--",
+            )
+        except parser._parser.ParserError:
+            # TODO: add logger and print warning on exception
+            # Skip any dates not in the correct format
+            continue
 
 def plot_measures(
     df,
@@ -271,6 +287,7 @@ def plot_measures(
     column_to_plot,
     category=False,
     y_label="Percentage of achievement",
+    vlines=[]
 ):
     """Produce time series plot from measures table.  One line is plotted for each sub
     category within the category column.
@@ -313,6 +330,8 @@ def plot_measures(
     plt.gca().xaxis.set_major_formatter(
         mdates.ConciseDateFormatter(plt.gca().xaxis.get_major_locator())
     )
+
+    add_date_lines(plt, vlines)
 
     if category:
         plt.legend(df[category].unique(), loc="lower right")
