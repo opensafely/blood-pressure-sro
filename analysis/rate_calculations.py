@@ -3,7 +3,7 @@ from pathlib import Path
 import pandas as pd
 import os
 from cohortextractor import Measure
-from config import demographics, codelist_path, qof_measure_marker
+from config import demographics, codelist_path, qof_measure_marker, vertical_lines
 from ebmdatalab import charts
 
 from study_definition import measures
@@ -89,6 +89,7 @@ for key, value in measures_dict.items():
             show_legend=True,
         )
 
+        add_date_lines(bp002_decile_chart, vertical_lines)
         bp002_decile_chart.gcf().set_size_inches(15, 8)
         bp002_decile_chart.gca().set_yticklabels(
             ["{:.0f}%".format(x * 100) for x in bp002_decile_chart.gca().get_yticks()]
@@ -126,6 +127,7 @@ for key, value in measures_dict.items():
             column_to_plot="rate",
             category=None,
             y_label=None,
+            vlines=vertical_lines
         )
 
         df_total.to_csv(os.path.join(OUTPUT_DIR, "rate_table_total.csv"), index=False)
@@ -149,6 +151,7 @@ for key, value in measures_dict.items():
             column_to_plot="rate",
             category=value.group_by[0],
             y_label=None,
+            vlines=vertical_lines
         )
 
         df.to_csv(
