@@ -40,6 +40,7 @@ study = StudyDefinition(
         registered AND
         (NOT died) AND
         (sex = 'F' OR sex = 'M') AND
+        (age != 'missing') AND
 
         # Denominator Rule Number 1
         # Description: Reject patients from the specified population who are aged less than 45 years old. 
