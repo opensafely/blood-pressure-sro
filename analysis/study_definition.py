@@ -10,8 +10,6 @@ from codelists import codelist, ld_codes, nhse_care_homes_codes, bp_dec_codes
 from config import (
     start_date,
     end_date,
-    start_date_minus_5y,
-    end_date_minus_3m,
     codelist_path,
     demographics,
 )
