@@ -12,29 +12,6 @@ end_date = "2022-03-31"
 # If a date is out of range of the graph, it will not be visible
 vertical_lines = ["2020-04-01", "2021-04-01"]
 
-# Define a function for fun, I'm not really happy with this but it works
-# Definitely need some help improving this, need to learn how to write robust funs in py
-def calculate_date(date, months):
-    """Add or substract months to a date in "YYYY-MM-DD" format.
-
-    Args:
-        date: date as string in YYYY-MM-DD format.
-        month: Number of month to add (+) or substract (-)
-
-    Returns:
-        Date as string in YYYY-MM-DD format
-    """
-
-    date_calc = datetime.strptime(date, "%Y-%m-%d").date() + relativedelta(
-        months=months
-    )
-    return date_calc.strftime("%Y-%m-%d")
-
-
-# Define more date variables needed for this project
-start_date_minus_5y = calculate_date(date=end_date, months=-(5 * 12))
-end_date_minus_3m = calculate_date(date=end_date, months=-3)
-
 # demographic variables by which code use is broken down
 demographics = [
     "sex",
