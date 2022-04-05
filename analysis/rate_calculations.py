@@ -92,17 +92,6 @@ for key, value in measures_dict.items():
         bp002_decile_chart.gca().set_yticklabels(
             ["{:.0f}%".format(x * 100) for x in bp002_decile_chart.gca().get_yticks()]
         )
-        # bp002_decile_chart.gca().set_xticklabels(bp002_decile_chart.gca().get_yticks(), rotation='horizontal')
-        # bp002_decile_chart.gca().xaxis.set_major_formatter(
-        #     mdates.ConciseDateFormatter(bp002_decile_chart.gca().xaxis.get_major_locator()))
-
-        bp002_decile_chart.rc("font", size=16)
-        bp002_decile_chart.rc("axes", titlesize=16)
-        bp002_decile_chart.rc("axes", labelsize=16)
-        bp002_decile_chart.rc("xtick", labelsize=16)
-        bp002_decile_chart.rc("ytick", labelsize=16)
-        bp002_decile_chart.rc("legend", fontsize=16)
-        bp002_decile_chart.rc("figure", titlesize=16)
 
         bp002_decile_chart.savefig("output/decile_chart.png", bbox_inches="tight")
 
@@ -125,7 +114,6 @@ for key, value in measures_dict.items():
             column_to_plot="rate",
             category=None,
             y_label=None,
-            autoscale=False,
             vlines=vertical_lines
         )
 
@@ -146,7 +134,6 @@ for key, value in measures_dict.items():
             df,
             filename=f"plot_{value.group_by[0]}.png",
             title=None,
-            # title=f'Breakdown of {qof_measure_marker} by {value.group_by[0]}',
             column_to_plot="rate",
             category=value.group_by[0],
             y_label=None,
