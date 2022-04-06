@@ -87,6 +87,8 @@ for key, value in measures_dict.items():
             show_legend=True,
         )
 
+        bp002_decile_chart.ylim(bottom=0, top=1)
+
         add_date_lines(bp002_decile_chart, vertical_lines)
         bp002_decile_chart.gcf().set_size_inches(15, 8)
         bp002_decile_chart.gca().set_yticklabels(
