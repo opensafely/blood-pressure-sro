@@ -42,7 +42,7 @@ for key, value in measures_dict.items():
 
     if key == "imd_rate":
         df = calculate_imd_group(df, value.numerator, "rate")
-        df = redact_small_numbers(df, 5, value.numerator, value.denominator, "rate")
+        df = redact_small_numbers(df, 0.005, value.numerator, value.denominator, "rate")
 
     elif key == "care_home_status_rate":
         df = convert_binary(
@@ -62,7 +62,7 @@ for key, value in measures_dict.items():
 
     elif key == "age_band_rate":
         df = df[df["age_band"] != "missing"]
-        df = redact_small_numbers(df, 5, value.numerator, value.denominator, "rate")
+        df = redact_small_numbers(df, 0.005, value.numerator, value.denominator, "rate")
         df.to_csv(
             os.path.join(OUTPUT_DIR, f"rate_table_{value.group_by[0]}.csv"), index=False
         )
@@ -84,7 +84,7 @@ for key, value in measures_dict.items():
             title=None,
             ylabel=None,
             show_outer_percentiles=False,
-            show_legend=True,
+            show_legend=False,
         )
 
         bp002_decile_chart.ylim(bottom=0, top=1)
@@ -108,6 +108,14 @@ for key, value in measures_dict.items():
             denominator=value.denominator,
             rate_per=1,
         )
+
+        plt.rc("font", size=16)
+        plt.rc("axes", titlesize=16)
+        plt.rc("axes", labelsize=16)
+        plt.rc("xtick", labelsize=16)
+        plt.rc("ytick", labelsize=16)
+        plt.rc("legend", fontsize=16)
+        plt.rc("figure", titlesize=16)
 
         plot_measures(
             df_total,
