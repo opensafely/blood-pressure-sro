@@ -226,6 +226,13 @@ measures = [
         group_by=["practice"],
         small_number_suppression=False,
     ),
+    Measure(
+        id="bp002_excl_denom_r3_imd",
+        numerator="bp_declined",
+        denominator="population",
+        group_by=["imd"],
+        small_number_suppression=False,
+    ),
 ]
 
 # Add demographic measures
