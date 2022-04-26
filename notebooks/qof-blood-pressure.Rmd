@@ -47,6 +47,8 @@ output:
     code_folding: hide
 editor_options: 
   chunk_output_type: inline
+  markdown: 
+    wrap: sentence
 ---
 
 ```{r setup, include=FALSE}
@@ -122,36 +124,39 @@ Dashboards presenting the annual targets of all QOF indicators published by NHSD
 
 ### HYP001 (Register)
 
-The description and rules for the Hypertension Register (HYP001, Version: 46.0) are outlined below:
+The denominator and numerator rules for BP002 (Version: 46.0) are outlined below.
 
-> "Select patients from the specified population who have a diagnosis of hypertension which has not been subsequently resolved."
+#### Denominator
 
-| Rule number | Rule                                              | Action if true | Action if false | Rule description or comments                                                                                                                                |
-|:-----------|:-----------|:-----------|:-----------|:-------------------------|
-| 1           | If `HYPLAT_DAT` ≠ Null AND If `HYPRES_DAT` = Null | Select         | Reject          | Select patients from the specified population who have a diagnosis of hypertension which has not been subsequently resolved. Reject the remaining patients. |
+| Rule number | Rule                                  | Action if true | Action if false | Rule description or comments                                                                                                                                      |
+|:--------|:--------|:--------|:--------|:-----------------------------------|
+| 1           | If `PAT_AGE` \< 45                    | Reject         | Next rule       | Reject patients from the specified population who are aged less than 45 years old.                                                                                |
+| 2           | If `BP_DAT` \> (`PPED` -- 5 years)    | Select         | Next rule       | Select patients passed to this rule who had their blood pressure recorded in the 5 year period leading up to and including the payment period end date.           |
+| 3           | If `BPDEC_DAT` \> (`PPED` -- 5 years) | Reject         | Next rule       | Reject patients passed to this rule chose not to have their blood pressure recorded in the 5 year period leading up to and including the payment period end date. |
+| 4           | If `REG_DAT` \> (`PPED` -- 3 months)  | Reject         | Select          | Reject patients passed to this rule who registered with the GP practice in the 3 month period leading up to and including the payment period end date.            |
+
+#### Numerator
+
+| Rule number | Rule                               | Action if true | Action if false | Rule description or comments                                                                                                                                                            |
+|:--------|:--------|:--------|:--------|:-------------------------------------|
+| 1           | If `BP_DAT` \> (`PPED` -- 5 years) | Select         | Reject          | Select patients from the denominator who had their blood pressure recorded in the 5 year period leading up to and including the payment period end date. Reject the remaining patients. |
 
 ## Codelists
 
 ### Hypertension Refsets
 
-| Cluster name                                                                                            | Description                                                                                | SNOMED CT            |
-|:----------------------------|:-------------------------|:----------------|
-| [BP_COD](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/bp_cod/)               | Blood pressure (BP) recording codes                                                        | \^999012731000230108 |
-| [BPDEC_COD](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/bpdec_cod/)         | Codes indicating the patient has chosen not to have blood pressure procedure               | \^999012611000230106 |
-| [HTMAX_COD](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/htmax_cod/)         | Codes for maximal blood pressure (BP) therapy                                              | \^999006651000230109 |
-| [HYP_COD](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/hyp_cod/)             | Hypertension diagnosis codes                                                               | \^999006611000230105 |
-| [HYPINVITE_COD](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/hypinvite_cod/) | Invite for hypertension care review codes                                                  | \^999012971000230108 |
-| [HYPPCADEC_COD](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/hyppcadec_cod/) | Codes indicating the patient has chosen not to receive hypertension quality indicator care | \^999013091000230102 |
-| [HYPPCAPU_COD](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/hyppcapu_cod/)   | Codes for hypertension quality indicator care unsuitable for patient                       | \^999013211000230104 |
-| [HYPRES_COD](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/hypres_cod/)       | Hypertension resolved codes                                                                | \^999006531000230101 |
+| Cluster name                                                                                             | Description                                                                  | SNOMED CT            |
+|:--------------------------------|:-----------------------|:--------------|
+| [BP_COD](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/bp_cod/20200812/)       | Blood pressure (BP) recording codes                                          | \^999012731000230108 |
+| [BPDEC_COD](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/bpdec_cod/20200812/) | Codes indicating the patient has chosen not to have blood pressure procedure | \^999012611000230106 |
 
 ### Breakdowns
 
 | Codelist name                                                                                                                                     | Description                                                                                                    | Coding system |
-|:------------------------------|:-----------------------|:----------------|
+|:--------------------------------|:------------------------|:-------------|
 | [Ethnicity](https://www.opencodelists.org/codelist/opensafely/ethnicity/2020-04-27)                                                               | A list of ethnicity codes in use in UK general practice including aggregate grouping at two levels (6 and 16). | CTV3          |
 | [NHS England Care Homes residential status](https://www.opencodelists.org/codelist/opensafely/nhs-england-care-homes-residential-status/3712ef13) | This codelists supports analysis of records of people who may reside in a nursing or care home.                | SNOMED CT     |
-| [Learning disability (LD) codes](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/ld_cod/)                                 | The following codes are used to check for a record of learning disability.                                     | SNOMED CT     |
+| [Learning disabilities](https://www.opencodelists.org/codelist/opensafely/learning-disabilities/2020-07-06)                                       | The following codes are used to indicate learning disability.                                                  | CTV3          |
 
 # Results
 
@@ -192,7 +197,6 @@ tab1_measures_bp002 <- df_measures_bp002 %>%
                            TRUE ~ group))
 
 ```
-
 
 ```{r tab1-bp002}
 
@@ -265,7 +269,6 @@ df_figs_measures_bp002 <- df_measures_bp002 %>%
                       sex = "sex",
                       population = "population")
 ```
-
 
 ```{r fig.width=8, fig.height=6.5}
 
@@ -588,29 +591,6 @@ bp002_care_home_pct_count
 
 # Discussion
 
-<!-- For hypertension we found a prevalence of  -->
-<!-- `r report_measures(df_measures_bp002, var_value = value, filter_date = "2019-03-01", filter_group = "population", filter_category = "population")` in March 2019,  -->
-<!-- `r report_measures(df_measures_bp002, var_value = value, filter_date = "2020-03-01", filter_group = "population", filter_category = "population")` in March 2020, and  -->
-<!-- `r report_measures(df_measures_bp002, var_value = value, filter_date = "2021-03-01", filter_group = "population", filter_category = "population")` in March 2021. -->
-<!-- Overall, we observed a small gradual decline in hypertension prevalence over time, with the biggest drop from March to April 2020 (12580 patients). -->
-<!-- Our results are very similar to the hypertension prevalence recorded by NHS Digital in 2019-22 (14.1%) and 2020-21 (13.9%) [@NHSDigital2021d]. -->
 
-<!-- df_measures_bp002 %>% filter(category == "population") %>% mutate(lag_hyp = hypertension - lag(hypertension)) %>% arrange(lag_hyp) -->
-
-<!-- Observed differences in prevalence count and percentage across the subgroups were mainly as expected. -->
-<!-- For example, while age group 80+ has the highest prevalence, age groups 60-69 and 70-79 are larger in size. -->
-<!-- The largest difference between subgroups was observed between patients with and without a record of  -->
-<!-- learning disability ( -->
-<!-- Yes: `r report_measures(df_measures_bp002, var_value = value, filter_date = "2019-03-01", filter_group = "learning_disability", filter_category = TRUE)`;  -->
-<!-- No: `r report_measures(df_measures_bp002, var_value = value, filter_date = "2019-03-01", filter_group = "learning_disability", filter_category = FALSE)`) and  -->
-<!-- care home status ( -->
-<!-- Yes: `r report_measures(df = df_measures_bp002, var_value = value, filter_date = "2019-03-01", filter_group = "care_home", filter_category = TRUE)`;  -->
-<!-- No: `r report_measures(df = df_measures_bp002, var_value = value, filter_date = "2019-03-01", filter_group = "care_home", filter_category = FALSE)`) and  -->
-<!-- for age bands 40-49 and lower compared with age bands 50-59 and higher. -->
-
-<!-- - TODO: Add how this relates to the pandemic -->
-<!-- - TODO: Add advantages of analysing QOF in OpenSAFELY  -->
-<!--   - e.g., monthly changes compared to annual average -->
-<!--   - e.g., modular code that can be reused and adapted for other research projects -->
 
 # References
