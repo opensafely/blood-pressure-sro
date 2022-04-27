@@ -69,15 +69,15 @@ study = StudyDefinition(
             returning="binary_flag",
             return_expectations={"incidence": 0.1},
         ),
-        # Define variable for denominator rule number 4
-        # Reject patients passed to this rule who registered with the GP practice in the 3 month period
-        # leading up to and including the payment period end date.
-        # Select the remaining patients.
-        registered_include=patients.registered_with_one_practice_between(
-            start_date="index_date - 3 months",
-            end_date="index_date",
-            return_expectations={"incidence": 0.1},
-        ),
+    ),
+    # Define variable for denominator rule number 4
+    # Reject patients passed to this rule who registered with the GP practice in the 3 month period
+    # leading up to and including the payment period end date.
+    # Select the remaining patients.
+    registered_include=patients.registered_with_one_practice_between(
+        start_date="index_date - 3 months",
+        end_date="index_date",
+        return_expectations={"incidence": 0.1},
     ),
     # Define variable for denominator rule number 3
     bp_declined=patients.with_these_clinical_events(
