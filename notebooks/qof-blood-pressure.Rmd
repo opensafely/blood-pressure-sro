@@ -55,10 +55,7 @@ editor_options:
 # Set Rmd options ----
 knitr::opts_chunk$set(echo = TRUE, 
                       warning = FALSE, 
-                      message = FALSE, 
-                      cache = TRUE, 
-                      R.options = list(width = 70), 
-                      layout="l-body-outset")
+                      message = FALSE)
 
 # Load packages ----
 library(ggplot2)
@@ -270,8 +267,7 @@ df_figs_measures_bp002 <- df_measures_bp002 %>%
                       population = "population")
 ```
 
-```{r fig.width=8, fig.height=6.5}
-
+```{r fig.width=8, fig.height=8}
 
 bp002_population_pct <- df_figs_measures_bp002 %>%
   dplyr::filter(group == "population") %>%
@@ -295,25 +291,44 @@ bp002_population_count <- df_figs_measures_bp002 %>%
     set_y_scale_limits = TRUE
   )
 
-bp002_population_pct_count <- (bp002_population_pct / bp002_population_count) +
-  patchwork::plot_layout(guides = 'collect') &
-  patchwork::plot_annotation(tag_levels = 'A')
+bp002_population_population <- df_figs_measures_bp002 %>%
+  dplyr::filter(group == "population") %>%
+  plot_qof_indicator(
+    value = population,
+    group_category = category,
+    y_scale = "count",
+    y_label = "Population (Count)",
+    set_y_scale_limits = TRUE
+    )
 
-# Save plot
+bp002_count_combined <- (bp002_population_count / bp002_population_population)
+
+p_ranges_y <- c(ggplot_build(bp002_count_combined[[1]])$layout$panel_scales_y[[1]]$range$range,
+                ggplot_build(bp002_count_combined[[2]])$layout$panel_scales_y[[1]]$range$range)
+
+bp002_count_combined <- bp002_count_combined & 
+  ggplot2::scale_y_continuous(labels = scales::comma, 
+                              limits = c(min(p_ranges_y), max(p_ranges_y)))
+
+bp002_population_pct_count <- (bp002_population_pct / bp002_count_combined) +
+  patchwork::plot_layout(guides = 'collect', height = c(1, 2)) &
+  patchwork::plot_annotation(tag_levels = 'A') &
+  ggplot2::theme(legend.position = "top")
+
 ggplot2::ggsave(filename = "bp002_population_pct_count.png",
                 plot = bp002_population_pct_count,
                 width = 8,
-                height = 6.5, 
+                height = 8, 
                 units = "in",
                 path = here::here("released_outputs", "figures")
                 )
-# Show plot
+
 bp002_population_pct_count
 ```
 
 ### Sex
 
-```{r fig.width=8, fig.height=6.5}
+```{r fig.width=8, fig.height=8}
 
 bp002_sex_pct <- df_figs_measures_bp002 %>%
   dplyr::filter(group == "sex") %>%
@@ -335,15 +350,35 @@ bp002_sex_count <- df_figs_measures_bp002 %>%
     scale_colour = "brewer_dark2"
   )
 
-bp002_sex_pct_count <- (bp002_sex_pct / bp002_sex_count) +
-  patchwork::plot_layout(guides = 'collect') &
+bp002_sex_population <- df_figs_measures_bp002 %>%
+  dplyr::filter(group == "sex") %>%
+  dplyr::filter(category != "missing") %>%
+  plot_qof_indicator(
+    value = population,
+    group_category = category,
+    y_scale = "count",
+    y_label = "Population (Count)",
+    scale_colour = "brewer_dark2"
+  )
+
+bp002_count_combined <- (bp002_sex_count / bp002_sex_population)
+
+p_ranges_y <- c(ggplot_build(bp002_count_combined[[1]])$layout$panel_scales_y[[1]]$range$range,
+                ggplot_build(bp002_count_combined[[2]])$layout$panel_scales_y[[1]]$range$range)
+
+bp002_count_combined <- bp002_count_combined & 
+  ggplot2::scale_y_continuous(labels = scales::comma, 
+                              limits = c(min(p_ranges_y), max(p_ranges_y)))
+
+bp002_sex_pct_count <- (bp002_sex_pct / bp002_count_combined) +
+  patchwork::plot_layout(guides = 'collect', height = c(1, 2)) &
   patchwork::plot_annotation(tag_levels = 'A') &
   ggplot2::theme(legend.position = "top")
 
 ggplot2::ggsave(filename = "bp002_sex_pct_count.png",
                 plot = bp002_sex_pct_count,
                 width = 8,
-                height = 6.5, 
+                height = 8, 
                 units = "in",
                 path = here::here("released_outputs", "figures")
                 )
@@ -353,7 +388,7 @@ bp002_sex_pct_count
 
 ### Age band
 
-```{r fig.width=8, fig.height=6.5}
+```{r fig.width=8, fig.height=8}
 
 bp002_age_band_pct <- df_figs_measures_bp002 %>%
   dplyr::filter(group == "age_band") %>%
@@ -375,15 +410,34 @@ bp002_age_band_count <- df_figs_measures_bp002 %>%
     y_label = "Achievement (Count)"
   )
 
-bp002_age_band_pct_count <- (bp002_age_band_pct / bp002_age_band_count) +
-  patchwork::plot_layout(guides = 'collect') &
+bp002_age_band_population <- df_figs_measures_bp002 %>%
+  dplyr::filter(group == "age_band") %>%
+  dplyr::filter(category != "missing") %>%
+  plot_qof_indicator(
+    value = population,
+    group_category = category,
+    y_scale = "count",
+    y_label = "Population (Count)"
+  )
+
+bp002_count_combined <- (bp002_age_band_count / bp002_age_band_population)
+
+p_ranges_y <- c(ggplot_build(bp002_count_combined[[1]])$layout$panel_scales_y[[1]]$range$range,
+                ggplot_build(bp002_count_combined[[2]])$layout$panel_scales_y[[1]]$range$range)
+
+bp002_count_combined <- bp002_count_combined & 
+  ggplot2::scale_y_continuous(labels = scales::comma, 
+                              limits = c(min(p_ranges_y), max(p_ranges_y)))
+
+bp002_age_band_pct_count <- (bp002_age_band_pct / bp002_count_combined) +
+  patchwork::plot_layout(guides = 'collect', height = c(1, 2)) &
   patchwork::plot_annotation(tag_levels = 'A') &
   ggplot2::theme(legend.position = "top")
 
 ggplot2::ggsave(filename = "bp002_age_band_pct_count.png",
                 plot = bp002_age_band_pct_count,
                 width = 8,
-                height = 6.5, 
+                height = 8, 
                 units = "in",
                 path = here::here("released_outputs", "figures")
                 )
@@ -393,7 +447,7 @@ bp002_age_band_pct_count
 
 ### IMD
 
-```{r fig.width=8, fig.height=6.5}
+```{r fig.width=8, fig.height=8}
 
 bp002_imd_pct <- df_figs_measures_bp002 %>%
   dplyr::filter(group == "imd") %>%
@@ -413,15 +467,33 @@ bp002_imd_count <- df_figs_measures_bp002 %>%
     y_label = "Achievement (Count)"
   )
 
-bp002_imd_pct_count <- (bp002_imd_pct / bp002_imd_count) +
-  patchwork::plot_layout(guides = 'collect') &
+bp002_imd_population <- df_figs_measures_bp002 %>%
+  dplyr::filter(group == "imd") %>%
+  plot_qof_indicator(
+    value = population,
+    group_category = category,
+    y_scale = "count",
+    y_label = "Population (Count)"
+  )
+
+bp002_count_combined <- (bp002_imd_count / bp002_imd_population)
+
+p_ranges_y <- c(ggplot_build(bp002_count_combined[[1]])$layout$panel_scales_y[[1]]$range$range,
+                ggplot_build(bp002_count_combined[[2]])$layout$panel_scales_y[[1]]$range$range)
+
+bp002_count_combined <- bp002_count_combined & 
+  ggplot2::scale_y_continuous(labels = scales::comma, 
+                              limits = c(min(p_ranges_y), max(p_ranges_y)))
+
+bp002_imd_pct_count <- (bp002_imd_pct / bp002_count_combined) +
+  patchwork::plot_layout(guides = 'collect', height = c(1, 2)) &
   patchwork::plot_annotation(tag_levels = 'A') &
   ggplot2::theme(legend.position = "top")
 
 ggplot2::ggsave(filename = "bp002_imd_pct_count.png",
                 plot = bp002_imd_pct_count,
                 width = 8,
-                height = 6.5, 
+                height = 8, 
                 units = "in",
                 path = here::here("released_outputs", "figures")
                 )
@@ -431,7 +503,7 @@ bp002_imd_pct_count
 
 ### Ethnicity
 
-```{r fig.width=8, fig.height=6.5}
+```{r fig.width=8, fig.height=8}
 
 bp002_ethnicity_pct <- df_figs_measures_bp002 %>%
   dplyr::filter(group == "ethnicity") %>%
@@ -453,15 +525,34 @@ bp002_ethnicity_count <- df_figs_measures_bp002 %>%
     scale_colour = "brewer_set1"
   )
 
-bp002_ethnicity_pct_count <- (bp002_ethnicity_pct / bp002_ethnicity_count) +
-  patchwork::plot_layout(guides = 'collect') &
+bp002_ethnicity_population <- df_figs_measures_bp002 %>%
+  dplyr::filter(group == "ethnicity") %>%
+  plot_qof_indicator(
+    value = population,
+    group_category = category,
+    y_scale = "count",
+    y_label = "Population (Count)",
+    scale_colour = "brewer_set1"
+  )
+
+bp002_count_combined <- (bp002_ethnicity_count / bp002_ethnicity_population)
+
+p_ranges_y <- c(ggplot_build(bp002_count_combined[[1]])$layout$panel_scales_y[[1]]$range$range,
+                ggplot_build(bp002_count_combined[[2]])$layout$panel_scales_y[[1]]$range$range)
+
+bp002_count_combined <- bp002_count_combined & 
+  ggplot2::scale_y_continuous(labels = scales::comma, 
+                              limits = c(min(p_ranges_y), max(p_ranges_y)))
+
+bp002_ethnicity_pct_count <- (bp002_ethnicity_pct / bp002_count_combined) +
+  patchwork::plot_layout(guides = 'collect', height = c(1, 2)) &
   patchwork::plot_annotation(tag_levels = 'A') &
   ggplot2::theme(legend.position = "top")
 
 ggplot2::ggsave(filename = "bp002_ethnicity_pct_count.png",
                 plot = bp002_ethnicity_pct_count,
                 width = 8,
-                height = 6.5, 
+                height = 8, 
                 units = "in",
                 path = here::here("released_outputs", "figures")
                 )
@@ -471,7 +562,7 @@ bp002_ethnicity_pct_count
 
 ### Region
 
-```{r fig.width=8, fig.height=6.5}
+```{r fig.width=8, fig.height=8}
 
 bp002_region_pct <- df_figs_measures_bp002 %>%
   dplyr::filter(group == "region") %>%
@@ -493,15 +584,34 @@ bp002_region_count <- df_figs_measures_bp002 %>%
     scale_colour = "brewer_set1"
   )
 
-bp002_region_pct_count <- (bp002_region_pct / bp002_region_count) +
-  patchwork::plot_layout(guides = 'collect') &
+bp002_region_population <- df_figs_measures_bp002 %>%
+  dplyr::filter(group == "region") %>%
+  plot_qof_indicator(
+    value = population,
+    group_category = category,
+    y_scale = "count",
+    y_label = "Population (Count)",
+    scale_colour = "brewer_set1"
+  )
+
+bp002_count_combined <- (bp002_region_count / bp002_region_population)
+
+p_ranges_y <- c(ggplot_build(bp002_count_combined[[1]])$layout$panel_scales_y[[1]]$range$range,
+                ggplot_build(bp002_count_combined[[2]])$layout$panel_scales_y[[1]]$range$range)
+
+bp002_count_combined <- bp002_count_combined & 
+  ggplot2::scale_y_continuous(labels = scales::comma, 
+                              limits = c(min(p_ranges_y), max(p_ranges_y)))
+
+bp002_region_pct_count <- (bp002_region_pct / bp002_count_combined) +
+  patchwork::plot_layout(guides = 'collect', height = c(1, 2)) &
   patchwork::plot_annotation(tag_levels = 'A') &
   ggplot2::theme(legend.position = "top")
 
 ggplot2::ggsave(filename = "bp002_region_pct_count.png",
                 plot = bp002_region_pct_count,
                 width = 8,
-                height = 6.5, 
+                height = 8, 
                 units = "in",
                 path = here::here("released_outputs", "figures")
                 )
@@ -511,7 +621,7 @@ bp002_region_pct_count
 
 ### Learning disability
 
-```{r fig.width=8, fig.height=6.5}
+```{r fig.width=8, fig.height=8}
 
 bp002_learning_disability_pct <- df_figs_measures_bp002 %>%
   dplyr::filter(group == "learning_disability") %>%
@@ -533,15 +643,34 @@ bp002_learning_disability_count <- df_figs_measures_bp002 %>%
     scale_colour = "brewer_dark2"
   )
 
-bp002_learning_disability_pct_count <- (bp002_learning_disability_pct / bp002_learning_disability_count) +
-  patchwork::plot_layout(guides = 'collect') &
+bp002_learning_disability_population <- df_figs_measures_bp002 %>%
+  dplyr::filter(group == "learning_disability") %>%
+  plot_qof_indicator(
+    value = population,
+    group_category = category,
+    y_scale = "count",
+    y_label = "Population (Count)",
+    scale_colour = "brewer_dark2"
+  )
+
+bp002_count_combined <- (bp002_learning_disability_count / bp002_learning_disability_population)
+
+p_ranges_y <- c(ggplot_build(bp002_count_combined[[1]])$layout$panel_scales_y[[1]]$range$range,
+                ggplot_build(bp002_count_combined[[2]])$layout$panel_scales_y[[1]]$range$range)
+
+bp002_count_combined <- bp002_count_combined & 
+  ggplot2::scale_y_continuous(labels = scales::comma, 
+                              limits = c(min(p_ranges_y), max(p_ranges_y)))
+
+bp002_learning_disability_pct_count <- (bp002_learning_disability_pct / bp002_count_combined) +
+  patchwork::plot_layout(guides = 'collect', height = c(1, 2)) &
   patchwork::plot_annotation(tag_levels = 'A') &
   ggplot2::theme(legend.position = "top")
 
 ggplot2::ggsave(filename = "bp002_learning_disability_pct_count.png",
                 plot = bp002_learning_disability_pct_count,
                 width = 8,
-                height = 6.5, 
+                height = 8, 
                 units = "in",
                 path = here::here("released_outputs", "figures")
                 )
@@ -551,7 +680,7 @@ bp002_learning_disability_pct_count
 
 ### Care home status
 
-```{r fig.width=8, fig.height=6.5}
+```{r fig.width=8, fig.height=8}
 
 bp002_care_home_pct <- df_figs_measures_bp002 %>%
   dplyr::filter(group == "care_home_status") %>%
@@ -573,15 +702,34 @@ bp002_care_home_count <- df_figs_measures_bp002 %>%
     scale_colour = "brewer_dark2"
   )
 
-bp002_care_home_pct_count <- (bp002_care_home_pct / bp002_care_home_count) +
-  patchwork::plot_layout(guides = 'collect') &
+bp002_care_home_population <- df_figs_measures_bp002 %>%
+  dplyr::filter(group == "care_home_status") %>%
+  plot_qof_indicator(
+    value = population,
+    group_category = category,
+    y_scale = "count",
+    y_label = "Population (Count)",
+    scale_colour = "brewer_dark2"
+  )
+
+bp002_count_combined <- (bp002_care_home_count / bp002_care_home_population)
+
+p_ranges_y <- c(ggplot_build(bp002_count_combined[[1]])$layout$panel_scales_y[[1]]$range$range,
+                ggplot_build(bp002_count_combined[[2]])$layout$panel_scales_y[[1]]$range$range)
+
+bp002_count_combined <- bp002_count_combined & 
+  ggplot2::scale_y_continuous(labels = scales::comma, 
+                              limits = c(min(p_ranges_y), max(p_ranges_y)))
+
+bp002_care_home_pct_count <- (bp002_care_home_pct / bp002_count_combined) +
+  patchwork::plot_layout(guides = 'collect', height = c(1, 2)) &
   patchwork::plot_annotation(tag_levels = 'A') &
   ggplot2::theme(legend.position = "top")
 
 ggplot2::ggsave(filename = "bp002_care_home_pct_count.png",
                 plot = bp002_care_home_pct_count,
                 width = 8,
-                height = 6.5, 
+                height = 8, 
                 units = "in",
                 path = here::here("released_outputs", "figures")
                 )
@@ -590,7 +738,5 @@ bp002_care_home_pct_count
 ```
 
 # Discussion
-
-
 
 # References
