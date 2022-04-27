@@ -69,15 +69,6 @@ study = StudyDefinition(
             returning="binary_flag",
             return_expectations={"incidence": 0.1},
         ),
-        # Define variable for denominator rule number 3
-        bp_declined=patients.with_these_clinical_events(
-            between=[
-                "first_day_of_month(index_date) - 5 years",
-                "last_day_of_month(index_date)",
-            ],
-            codelist=bp_dec_codes,
-            returning="binary_flag",
-        ),
         # Define variable for denominator rule number 4
         # Reject patients passed to this rule who registered with the GP practice in the 3 month period
         # leading up to and including the payment period end date.
@@ -87,6 +78,15 @@ study = StudyDefinition(
             end_date="index_date",
             return_expectations={"incidence": 0.1},
         ),
+    ),
+    # Define variable for denominator rule number 3
+    bp_declined=patients.with_these_clinical_events(
+        between=[
+            "first_day_of_month(index_date) - 5 years",
+            "last_day_of_month(index_date)",
+        ],
+        codelist=bp_dec_codes,
+        returning="binary_flag",
     ),
     # Currently this is not possible, here we are calculating age as of March 1st YYYY
     # because age_as_of uses the first day of the given month to calculate the age
@@ -224,6 +224,42 @@ measures = [
         numerator="event",
         denominator="population",
         group_by=["practice"],
+        small_number_suppression=False,
+    ),
+    # Exclusions
+    Measure(
+        id="bp002_excl_denom_r3_population",
+        numerator="bp_declined",
+        denominator="population",
+        group_by=["population"],
+        small_number_suppression=False,
+    ),
+    Measure(
+        id="bp002_excl_denom_r3_imd",
+        numerator="bp_declined",
+        denominator="population",
+        group_by=["imd"],
+        small_number_suppression=False,
+    ),
+    Measure(
+        id="bp002_excl_denom_r3_age_band",
+        numerator="bp_declined",
+        denominator="population",
+        group_by=["age_band"],
+        small_number_suppression=False,
+    ),
+    Measure(
+        id="bp002_excl_denom_r3_ethnicity",
+        numerator="bp_declined",
+        denominator="population",
+        group_by=["ethnicity"],
+        small_number_suppression=False,
+    ),
+    Measure(
+        id="bp002_excl_denom_r3_sex",
+        numerator="bp_declined",
+        denominator="population",
+        group_by=["sex"],
         small_number_suppression=False,
     ),
 ]

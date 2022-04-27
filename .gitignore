@@ -11,3 +11,6 @@ metadata/*
 .DS_Store
 .Rproj.user
 .Rhistory
+/released_outputs/*
+notebooks/qof-blood-pressure.html
+notebooks/qof-blood-pressure*
