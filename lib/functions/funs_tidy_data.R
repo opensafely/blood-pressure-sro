@@ -33,7 +33,7 @@ tidy_category_names <- function(df,
   if (!is.null(population)) {
     df <- df %>% 
       mutate({{ category }} := case_when({{ group }} == {{ population }} ~ 
-                                           as.character("Total"),
+                                           as.character("Total (45 years or older)"),
                                          TRUE ~ {{ category }}))
   }
   
