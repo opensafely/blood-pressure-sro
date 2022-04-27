@@ -61,3 +61,50 @@ df_bp_002_measures <- df_bp_002_measures %>%
 ## Next, write csv file
 readr::write_csv(df_bp_002_measures,
                  here::here("output", "measures", "measures_bp002.csv"))
+
+
+# bp_002_excl_denom_r3_measures ----
+
+dir_bp_002_excl_denom_r3_measures <- fs::dir_ls(path = "output/",
+                                   glob = "*measure_bp002_excl_denom_r3_*_rate.csv$")
+dir_bp_002_excl_measures
+# Split dir paths because file structure differes
+## Grouped measures (excluding practice)
+dir_bp_002_excl_denom_r3_measures_groups <- dir_bp_002_excl_denom_r3_measures[!stringr::str_detect(dir_bp_002_excl_denom_r3_measures, "population")]
+
+## Population measure
+dir_bp_002_excl_denom_r3_measures_pop <- dir_bp_002_excl_denom_r3_measures[stringr::str_detect(dir_bp_002_excl_denom_r3_measures, "population")]
+
+# Load files ----
+## Load grouped measures
+## Pivot longer so variable names are identical across measure files
+df_bp_002_excl_denom_r3_measures_groups <- dir_bp_002_excl_denom_r3_measures_groups %>%
+  purrr::map(readr::read_csv) %>%
+  purrr::map_dfr(tidyr::pivot_longer,
+                 cols = 1,
+                 names_to = "group",
+                 values_to = "category",
+                 values_transform = list(category = as.character))
+
+# Load population measure ---
+# Add variables that are missing compared to grouped measures
+df_bp_002_excl_denom_r3_measures_pop <- readr::read_csv(here::here(dir_bp_002_excl_denom_r3_measures_pop)) %>%
+  dplyr::mutate(group = "population",
+                category = "population")
+
+# Join all measures into one object ---
+df_bp_002_excl_denom_r3_measures <- df_bp_002_excl_denom_r3_measures_groups %>%
+  dplyr::bind_rows(df_bp_002_excl_denom_r3_measures_pop)
+
+# Write hyp001 csv file
+## First create subdirectory (if it doesn't exist)
+# fs::dir_create(here::here("output", "measures"))
+
+# Round counts to the nearest 10
+df_bp_002_excl_denom_r3_measures <- df_bp_002_excl_denom_r3_measures %>%
+   dplyr::mutate(dplyr::across(c("bp_declined", "population"), round, -1))
+
+## Next, write csv file
+readr::write_csv(df_bp_002_excl_denom_r3_measures,
+                 here::here("output", "measures", "measures_bp002_excl_denom_r3.csv"))
+
