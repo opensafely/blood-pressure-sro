@@ -41,14 +41,14 @@ measures = [
     Measure(
         id="bp002_population_rate",
         numerator="bp002_numerator",
-        denominator="population",
+        denominator="bp002_denominator",
         group_by=["practice"],
         small_number_suppression=True,
     ),
     Measure(
         id="bp002_excl_denom_r2_rate",
         numerator="bp002_denominator_r2",
-        denominator="population",
+        denominator="bp002_denominator",
         group_by=["practice"],
         small_number_suppression=True,
     ),
