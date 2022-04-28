@@ -1,31 +1,26 @@
-from dateutil.relativedelta import relativedelta
-from datetime import date, datetime
+# Study start date
+# Note: This should match the start dates in project.yaml
+# In QOF also: Payment Period Start Date (PPSD)
+start_date = "2019-03-01"
 
-# study start date. should match date in project.yaml
-start_date = "2019-09-01"
-
-# study end date. should match date in project.yaml
-end_date = "2022-03-31"
-
-# Vertical plot lines for financial year
-# Leave an empty list if no lines needed
-# If a date is out of range of the graph, it will not be visible
-vertical_lines = ["2020-04-01", "2021-04-01"]
+# Study end date
+# Note: This should match the end dates in project.yaml
+# In QOF also: Payment Period End Date (PPED)
+end_date = "2022-03-01"
 
 # demographic variables by which code use is broken down
-demographics = [
-    "sex",
+demographic_breakdowns = [
     "age_band",
+    "sex",
     "region",
+    "care_home",
+    "learning_disability",
     "imd",
     "ethnicity",
-    "learning_disability",
-    "care_home_status",
 ]
 
-# name of measure
-marker = "QOF Blood Pressure targets"
-qof_measure_marker = "BP002"
-
-# Codelist path
-codelist_path = "codelists/nhsd-primary-care-domain-refsets-bp_cod.csv"
+bp002_exclusions = [
+    "bp002_denominator_r2",
+    "bp002_denominator_r3",
+    "bp002_denominator_r4",
+]
