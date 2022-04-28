@@ -124,8 +124,8 @@ demographic_variables = dict(
         return_expectations={
             "int": {"distribution": "normal", "mean": 25, "stddev": 5},
             "incidence": 0.5,
-            },
-            ),
+        },
+    ),
     learning_disability=patients.with_these_clinical_events(
         learning_disability_codes,
         on_or_before="last_day_of_month(index_date)",
