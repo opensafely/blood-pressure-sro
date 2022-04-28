@@ -4,7 +4,12 @@ import json
 import pandas as pd
 
 # Import dates and codelists
-from config import start_date, end_date, demopgraphic_breakdowns
+from config import (
+    start_date,
+    end_date,
+    demopgraphic_breakdowns,
+    bp002_exclusions,
+)
 from codelists_bp import bp_codes, bp_dec_codes
 
 # Import shared variable dictionaries
@@ -37,41 +42,39 @@ study = StudyDefinition(
     **bp002_variables,
 )
 
+# Create blood pressure achievement measures (2)
 measures = [
     Measure(
-        id="bp002_population_rate",
+        id="bp002_achievem_population_rate",
         numerator="bp002_numerator",
         denominator="bp002_denominator",
-        group_by=["practice"],
+        group_by=["population"],
         small_number_suppression=True,
     ),
     Measure(
-        id="bp002_excl_denom_r2_rate",
-        numerator="bp002_denominator_r2",
-        denominator="population",
-        group_by=["practice"],
-        small_number_suppression=True,
-    ),
-    Measure(
-        id="bp002_excl_denom_r3_rate",
-        numerator="bp002_denominator_r3",
-        denominator="population",
-        group_by=["practice"],
-        small_number_suppression=True,
-    ),
-    Measure(
-        id="bp002_excl_denom_r4_rate",
-        numerator="bp002_denominator_r4",
-        denominator="population",
+        id="bp002_achievem_practice_rate",
+        numerator="bp002_numerator",
+        denominator="bp002_denominator",
         group_by=["practice"],
         small_number_suppression=True,
     ),
 ]
 
-# Create blood pressure indicator BP002 measures
+# Create blood pressure exclusion measures (3) for total population
+for exclusion in bp002_exclusions:
+    m = Measure(
+        id=f"bp002_excl_{exclusion}_breakdown_rate",
+        numerator=exclusion,
+        denominator="population",
+        group_by=["population"],
+        small_number_suppression=True,
+    )
+    measures.append(m)
+
+# Create demographic breakdowns (7) for blood pressure indicator BP002 measures
 for breakdown in demopgraphic_breakdowns:
     m = Measure(
-        id=f"bp002_{breakdown}_breakdown_rate",
+        id=f"bp002_achievem_{breakdown}_breakdown_rate",
         numerator="bp002_numerator",
         denominator="bp002_denominator",
         group_by=[breakdown],
@@ -79,13 +82,14 @@ for breakdown in demopgraphic_breakdowns:
     )
     measures.append(m)
 
-# Create blood pressure exclusion measures
+# Create demographic breakdowns for blood pressure exclusion measures (7 * 3)
 for breakdown in demopgraphic_breakdowns:
-    m = Measure(
-        id=f"bp002_{breakdown}_breakdown_rate",
-        numerator="bp002_numerator",
-        denominator="bp002_denominator",
-        group_by=[breakdown],
-        small_number_suppression=True,
-    )
-    measures.append(m)
+    for exclusion in bp002_exclusions:
+        m = Measure(
+            id=f"bp002_excl_{breakdown}_breakdown_rate",
+            numerator=exclusion,
+            denominator="population",
+            group_by=[breakdown],
+            small_number_suppression=True,
+        )
+        measures.append(m)
