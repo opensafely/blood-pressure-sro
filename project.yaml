@@ -47,3 +47,20 @@ actions:
      outputs:
        moderately_sensitive:
          measure_csv: output/joined/measure_bp002_*_rate.csv
+
+  generate_deciles_charts:
+    run: >
+      deciles-charts:v0.0.15
+        --input-files output/joined/measure_*.csv
+        --output-dir output
+    config:
+      show_outer_percentiles: false
+      tables:
+        output: true
+      charts:
+        output: true
+    needs: [generate_measures_bp002]
+    outputs:
+      moderately_sensitive:
+        deciles_charts: output/deciles_*_*.*
+      
