@@ -5,8 +5,45 @@ expectations:
 
 actions:
 
-  generate_study_population:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition
+  # Generate ethnicity study population
+  generate_study_population_ethnicity:
+    run: > 
+      cohortextractor:latest generate_cohort 
+      --study-definition study_definition_ethnicity 
+      --output-dir=output
+      --output-format=csv
     outputs:
       highly_sensitive:
-        cohort: output/input.csv
+        cohort: output/input_ethnicity.csv
+
+  generate_study_population_bp002:
+    run: > 
+      cohortextractor:latest generate_cohort 
+      --study-definition study_definition_bp002 
+      --index-date-range "2019-03-01 to 2022-03-01 by month" 
+      --output-dir=output
+      --output-format=csv
+    outputs:
+      highly_sensitive:
+        cohort: output/input_bp002*.csv
+  
+  join_ethnicity_bp002:
+    run: >
+      cohort-joiner:v0.0.12 
+        --lhs output/input_bp002*.csv
+        --rhs output/input_ethnicity.csv
+        --output-dir output/joined
+    needs: [generate_study_population_ethnicity, generate_study_population_bp002]
+    outputs:
+      highly_sensitive:
+        cohort: output/joined/input_bp002*.csv
+
+  generate_measures_bp002:
+     run: >
+       cohortextractor:latest generate_measures 
+       --study-definition study_definition_bp002 
+       --output-dir=output/joined
+     needs: [join_ethnicity_bp002]
+     outputs:
+       moderately_sensitive:
+         measure_csv: output/joined/measure_bp002_*_rate.csv
