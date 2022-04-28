@@ -78,7 +78,7 @@ study = StudyDefinition(
         start_date="index_date - 3 months",
         end_date="index_date",
         return_expectations={"incidence": 0.1},
-    ),
+    ),              
     # Define variable for denominator rule number 3
     bp_declined=patients.with_these_clinical_events(
         between=[
@@ -226,59 +226,43 @@ measures = [
         group_by=["practice"],
         small_number_suppression=False,
     ),
-    # Exclusions
-    Measure(
-        id="bp002_excl_denom_r3_population_rate",
-        numerator="bp_declined",
-        denominator="population",
-        group_by=["population"],
-        small_number_suppression=False,
-    ),
-    Measure(
-        id="bp002_excl_denom_r3_imd_rate",
-        numerator="bp_declined",
-        denominator="population",
-        group_by=["imd"],
-        small_number_suppression=False,
-    ),
-    Measure(
-        id="bp002_excl_denom_r3_age_band_rate",
-        numerator="bp_declined",
-        denominator="population",
-        group_by=["age_band"],
-        small_number_suppression=False,
-    ),
-    Measure(
-        id="bp002_excl_denom_r3_ethnicity_rate",
-        numerator="bp_declined",
-        denominator="population",
-        group_by=["ethnicity"],
-        small_number_suppression=False,
-    ),
-    Measure(
-        id="bp002_excl_denom_r3_sex_rate",
-        numerator="bp_declined",
-        denominator="population",
-        group_by=["sex"],
-        small_number_suppression=False,
-    ),
 ]
+
+# Add exclusions denominator 3
+for d in demographics:
+
+    m = Measure(
+        id=f"bp002_excl_denom_r3_{d}_rate",
+        numerator="bp_declined",
+        denominator="population",
+        group_by=[d],
+        small_number_suppression=True,
+    )
+
+    measures.append(m)
+
+# Add exclusions denominator 4
+for d in demographics:
+
+    m = Measure(
+        id=f"bp002_excl_denom_r4_{d}_rate",
+        numerator="registered_include",
+        denominator="population",
+        group_by=[d],
+        small_number_suppression=True,
+    )
+
+    measures.append(m)
 
 # Add demographic measures
 for d in demographics:
-
-    if d in ["imd", "age_band"]:
-        apply_suppression = False
-
-    else:
-        apply_suppression = True
 
     m = Measure(
         id=f"{d}_rate",
         numerator="event",
         denominator="population",
         group_by=[d],
-        small_number_suppression=apply_suppression,
+        small_number_suppression=True,
     )
 
     measures.append(m)
