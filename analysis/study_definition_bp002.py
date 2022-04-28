@@ -45,9 +45,41 @@ measures = [
         group_by=["practice"],
         small_number_suppression=True,
     ),
+    Measure(
+        id="bp002_population_rate",
+        numerator="bp002_denominator_r2",
+        denominator="population",
+        group_by=["practice"],
+        small_number_suppression=True,
+    ),
+    Measure(
+        id="bp002_population_rate",
+        numerator="bp002_denominator_r3",
+        denominator="population",
+        group_by=["practice"],
+        small_number_suppression=True,
+    ),
+    Measure(
+        id="bp002_population_rate",
+        numerator="bp002_denominator_r4",
+        denominator="population",
+        group_by=["practice"],
+        small_number_suppression=True,
+    ),
 ]
 
-# Create hypertension register (hyp_reg) measures
+# Create blood pressure indicator BP002 measures
+for breakdown in demopgraphic_breakdowns:
+    m = Measure(
+        id=f"bp002_{breakdown}_breakdown_rate",
+        numerator="bp002_numerator",
+        denominator="bp002_denominator",
+        group_by=[breakdown],
+        small_number_suppression=True,
+    )
+    measures.append(m)
+
+# Create blood pressure exclusion measures
 for breakdown in demopgraphic_breakdowns:
     m = Measure(
         id=f"bp002_{breakdown}_breakdown_rate",
