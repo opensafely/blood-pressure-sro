@@ -9,7 +9,7 @@ start_date = "2019-03-01"
 end_date = "2022-03-01"
 
 # demographic variables by which code use is broken down
-demopgraphic_breakdowns = [
+demographic_breakdowns = [
     "age_band",
     "sex",
     "region",

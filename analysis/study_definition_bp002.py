@@ -7,7 +7,7 @@ import pandas as pd
 from config import (
     start_date,
     end_date,
-    demopgraphic_breakdowns,
+    demographic_breakdowns,
     bp002_exclusions,
 )
 from codelists_bp import bp_codes, bp_dec_codes
@@ -72,7 +72,7 @@ for exclusion in bp002_exclusions:
     measures.append(m)
 
 # Create demographic breakdowns (7) for blood pressure indicator BP002 measures
-for breakdown in demopgraphic_breakdowns:
+for breakdown in demographic_breakdowns:
     m = Measure(
         id=f"bp002_achievem_{breakdown}_breakdown_rate",
         numerator="bp002_numerator",
@@ -83,7 +83,7 @@ for breakdown in demopgraphic_breakdowns:
     measures.append(m)
 
 # Create demographic breakdowns for blood pressure exclusion measures (7 * 3)
-for breakdown in demopgraphic_breakdowns:
+for breakdown in demographic_breakdowns:
     for exclusion in bp002_exclusions:
         m = Measure(
             id=f"bp002_excl_{breakdown}_breakdown_rate",
