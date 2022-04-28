@@ -15,21 +15,7 @@ study = StudyDefinition(
         "rate": "uniform",
     },
     index_date=end_date,
-    population=patients.satisfying(
-        """
-        NOT has_died
-        AND
-        registered
-        """,
-        has_died=patients.died_from_any_cause(
-            on_or_before="last_day_of_month(index_date)",
-            returning="binary_flag",
-        ),
-        registered=patients.satisfying(
-            "registered_at_start",
-            registered_at_start=patients.registered_as_of("last_day_of_month(index_date)"),
-        ),
-    ),
+    population=patients.all(),
     ethnicity=patients.categorised_as(
         {
             "Unknown": "DEFAULT",
