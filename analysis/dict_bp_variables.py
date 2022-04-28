@@ -9,8 +9,7 @@ from codelists_bp import (
     bp_dec_codes,
 )
 
-# Define dictionary of variables needed for hypertension register:
-# Patients with an unresolved diagnosis of hypertension
+# Define dictionary of variables needed for blood pressure indicator BP002:
 bp002_variables = dict(
     # Denominator Rule Number 1
     # Description: Reject patients from the specified population who are

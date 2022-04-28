@@ -32,7 +32,7 @@ study = StudyDefinition(
         age >= 45
         """,
     ),
-    # Include hypertension and demographic variable dictionaries
+    # Include blood pressure and demographic variable dictionaries
     **demographic_variables,
     **bp002_variables,
 )
