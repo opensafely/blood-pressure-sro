@@ -32,7 +32,13 @@ study = StudyDefinition(
             include_date_of_match=False,
             return_expectations={
                 "category": {
-                    "ratios": {"1": 0.2, "2": 0.2, "3": 0.2, "4": 0.2, "5": 0.2}
+                    "ratios": {
+                        "1": 0.2,
+                        "2": 0.2,
+                        "3": 0.2,
+                        "4": 0.2,
+                        "5": 0.2
+                    }
                 },
                 "incidence": 0.75,
             },
@@ -44,10 +50,11 @@ study = StudyDefinition(
                     "Mixed": 0.2,
                     "Asian": 0.2,
                     "Black": 0.2,
-                    "Other": 0.2,
+                    "Other": 0.1,
+                    "Unknown": 0.1,
                 }
             },
-            "incidence": 0.8,
+            "rate": "universal",
         },
     ),
 )
