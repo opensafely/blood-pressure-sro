@@ -89,6 +89,7 @@ bp002_variables = dict(
         # Description: Select patients from the denominator who had their
         # blood pressure recorded in the 5 year period leading up to and
         # including the payment period end date. Reject the remaining patients.
+        bp002_denominator AND
         bp002_denominator_r2
         """
     ),
