@@ -55,6 +55,13 @@ bp002_variables = dict(
             returning="binary_flag",
         ),
     ),
+    # Define exclusion variable for denominator rule 3
+    # to be used as numerator in measures
+    bp002_excl_denominator_r3=patients.satisfying(
+        """
+        bp_dec_5y
+        """
+    ),
     # Denominator Rule Number 4
     # Description: Reject patients passed to this rule who registered with
     # the GP practice in the 3 month period leading up to and including
@@ -72,6 +79,13 @@ bp002_variables = dict(
             end_date="index_date",
             return_expectations={"incidence": 0.1},
         ),
+    ),
+    # Define exclusion variable for denominator rule 4
+    # to be used as numerator in measures
+    bp002_excl_denominator_r4=patients.satisfying(
+        """
+        NOT reg_dat_3m
+        """
     ),
     bp002_denominator=patients.satisfying(
         """
