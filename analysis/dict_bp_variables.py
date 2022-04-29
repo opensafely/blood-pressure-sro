@@ -44,7 +44,7 @@ bp002_variables = dict(
     # including the payment period end date.
     bp002_denominator_r3=patients.satisfying(
         """
-        NOT bp_dec_5y
+        bp_dec_5y
         """,
         bp_dec_5y=patients.with_these_clinical_events(
             between=[
@@ -58,15 +58,12 @@ bp002_variables = dict(
     # Denominator Rule Number 4
     # Description: Reject patients passed to this rule who registered with
     # the GP practice in the 3 month period leading up to and including
-    # the payment period end date.
+    # the payment period end date. This keeps patients that are registered
+    # with one practice in the last 3 months
     bp002_denominator_r4=patients.satisfying(
         """
         reg_dat_3m
         """,
-        # NOTE: This variable selects patients that were registered with one
-        # practice in the last 3 months. Therefore, this variable (reg_dat_3m)
-        # specifies the patients that need to be selected for in the
-        # denominator.
         reg_dat_3m=patients.registered_with_one_practice_between(
             start_date="index_date - 3 months",
             end_date="index_date",
@@ -86,10 +83,9 @@ bp002_variables = dict(
         """
         # Numerator Rule Number 1
         # NOTE: This is same as Denominator Rule Number 2
-        # Description: Select patients from the denominator who had their
-        # blood pressure recorded in the 5 year period leading up to and
-        # including the payment period end date. Reject the remaining patients.
-        bp002_denominator AND
+        # Description: Select patients passed to this rule who had their blood
+        # pressure recorded in the 5 year period leading up to and including
+        # the payment period end date.
         bp002_denominator_r2
         """
     ),
