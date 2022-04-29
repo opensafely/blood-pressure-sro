@@ -63,7 +63,7 @@ measures = [
 # Create blood pressure exclusion measures (3) for total population
 for exclusion in bp002_exclusions:
     m = Measure(
-        id=f"bp002_excl_{exclusion}_breakdown_rate",
+        id=f"""bp002_excl_{exclusion.lstrip("bp002_")}_population_rate""",
         numerator=exclusion,
         denominator="population",
         group_by=["population"],
@@ -86,7 +86,7 @@ for breakdown in demographic_breakdowns:
 for breakdown in demographic_breakdowns:
     for exclusion in bp002_exclusions:
         m = Measure(
-            id=f"bp002_excl_{breakdown}_breakdown_rate",
+            id=f"""bp002_excl_{exclusion.lstrip("bp002_")}_{breakdown}_breakdown_rate""",
             numerator=exclusion,
             denominator="population",
             group_by=[breakdown],
