@@ -20,7 +20,6 @@ demographic_breakdowns = [
 ]
 
 bp002_exclusions = [
-    "bp002_denominator_r2",
-    "bp002_denominator_r3",
-    "bp002_denominator_r4",
+    "bp002_excl_denominator_r3",
+    "bp002_excl_denominator_r4",
 ]
