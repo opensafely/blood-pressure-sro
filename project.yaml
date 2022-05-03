@@ -69,4 +69,4 @@ actions:
     needs: [generate_measures_bp002]
     outputs:
       moderately_sensitive:
-        measure_csv: output/measures/joined/measures_bp002_*.csv
+        measure_csv: output/joined/measures/measures_bp002_*.csv
