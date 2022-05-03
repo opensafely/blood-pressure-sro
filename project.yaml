@@ -64,3 +64,9 @@ actions:
       moderately_sensitive:
         deciles_charts: output/deciles_*_*.*
       
+  join_measures:
+    run: r:latest analysis/join_measures.R
+    needs: [generate_measures_bp002]
+    outputs:
+      moderately_sensitive:
+        measure_csv: output/measures/measures_bp002_*.csv
