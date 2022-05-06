@@ -1,0 +1,128 @@
+---
+title: "BP002 Exclusions"
+execute:
+  warning: false
+  message: false
+format:
+  html:
+    code-fold: true
+    code-summary: "Show code"
+    toc: true
+    toc-location: left
+    number-sections: true
+    number-depth: 3
+    page-layout: article
+---
+
+```{r load-pkgs}
+#| echo: false
+library(tidyverse)
+library(here)
+library(ggstream)
+source(here("lib/tidy_data.R"))
+```
+
+```{r load-data}
+df_bp002_achievem <- read_csv(here("released_output/joined/measures/measures_bp002_achievem.csv"))
+df_bp002_excl <- read_csv(here("released_output/joined/measures/measures_bp002_excl.csv"))
+```
+
+# BP002 Business Rules
+
+:::{.column-body-outset}
++-------------+-----------------------------------------+----------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Number      | Rule                                    | Action if true | Action if false | Rule description or comments                                                                                                                                      |                                                                                                                                   
++:============+:========================================+:===============+:================+:==================================================================================================================================================================+
+| 1           | If `PAT_AGE` \< 45                      | Reject         | Next rule       | Reject patients from the specified population who are aged less than 45 years old.                                                                                |
++-------------+-----------------------------------------+----------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| 2           | If `BP_DAT` \> (`PPED` - 5 years)       | Select         | Next rule       | Select patients passed to this rule who had their blood pressure recorded in the 5 year period leading up to and including the payment period end date.           |
++-------------+-----------------------------------------+----------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| 3           | If `BPDEC_DAT` \> (`PPED` - 5 years)    | Reject         | Next rule       | Reject patients passed to this rule chose not to have their blood pressure recorded in the 5 year period leading up to and including the payment period end date. |
++-------------+-----------------------------------------+----------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| 4           | If `REG_DAT` \> (`PPED` - 3 months)     | Reject         | Select          | Reject patients passed to this rule who registered with the GP practice in the 3 month period leading up to and including the payment period end date.            |
++-------------+-----------------------------------------+----------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+: BP002 Denominator Rules {#tbl-bp002-denom-rules}
+: {tbl-colwidths="[5,25,10,10,50]"}
+:::
+
+:::{.column-body-outset}
++-------------+-----------------------------------------+----------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Number      | Rule                                    | Action if true | Action if false | Rule description or comments                                                                                                                                      |                                                                                                                                   
++:============+:========================================+:===============+:================+:==================================================================================================================================================================+
+| 1           | If `BP_DAT` \> (`PPED` - 5 years)       | Select         | Reject          | Select patients from the denominator who had their blood pressure recorded in the 5 year period leading up to and including the payment period end date. Reject the remaining patients. |
++-------------+-----------------------------------------+----------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+: BP002 Numerator Rule {#tbl-bp002-num-rules}
+: {tbl-colwidths="[5,25,10,10,50]"}
+:::
+
+
+# Exclusions
+```{r}
+
+# df_bp002_achievem |>
+#   ggplot(aes(x = date, y = value, colour = category)) +
+#   geom_point() +
+#   geom_line() +
+#   facet_wrap(~group)
+```
+
+```{r}
+#| column: body-outset
+
+df_bp002_excl |>
+  filter(group == "age_band") |>
+  ggplot(aes(x = date, y = value, colour = category)) +
+  geom_point() +
+  geom_line() +
+  facet_grid(vars(excl_rule), vars(group)) +
+  ggplot2::scale_y_continuous(labels = scales::percent) +
+  scale_x_date(date_breaks = "2 months",
+               labels = scales::label_date_short()) +
+  labs(x = NULL, y = "Exclusions from QOF indicator") +
+  ggplot2::scale_colour_viridis_d(na.value = "grey50")
+```
+
+```{r}
+#| column: body-outset
+
+df_bp002_excl |>
+  filter(group == "imd") |>
+  filter(category != "missing") |>
+  ggplot(aes(x = date, y = value, colour = category)) +
+  geom_point() +
+  geom_line() +
+  facet_grid(vars(excl_rule), vars(group)) +
+  ggplot2::scale_y_continuous(labels = scales::percent) +
+  scale_x_date(date_breaks = "2 months",
+               labels = scales::label_date_short()) +
+  labs(x = NULL, y = "Exclusions from QOF indicator")
+```
+
+```{r}
+#| column: body-outset
+
+df_bp002_excl |>
+  filter(group == "region") |>
+  filter(!is.na(category)) |>
+  ggplot(aes(x = date, y = value, colour = category)) +
+  geom_point() +
+  geom_line() +
+  facet_grid(vars(excl_rule), vars(group)) +
+  ggplot2::scale_y_continuous(labels = scales::percent) +
+  scale_x_date(date_breaks = "2 months",
+               labels = scales::label_date_short()) +
+  labs(x = NULL, y = "Exclusions from QOF indicator")
+```
+
+```{r}
+#| column: body-outset
+
+df_bp002_excl |>
+  filter(group == "age_band") |>
+  filter(excl_rule == "bp002_denom_r4") |>
+  ggplot(aes(x = date, y = excl_denominator, fill = category)) +
+      scale_x_date(date_breaks = "2 months",
+               labels = scales::label_date_short()) +
+  geom_stream(bw = 0.75) +
+  ggplot2::theme_classic() 
+```
