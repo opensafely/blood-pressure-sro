@@ -1,0 +1,64 @@
+---
+title: "QOF BP REPORT"
+execute:
+  warning: false
+  message: false
+format:
+  html:
+    code-fold: true
+    code-summary: "Show code"
+    toc: true
+    toc-location: left
+    number-sections: true
+    number-depth: 3
+    page-layout: article
+    fig-width: 10
+    fig-height: 6
+---
+
+```{r}
+#| echo: false
+library(tidyverse)
+library(here)
+source(here("lib/tidy_data.R"))
+```
+
+```{r}
+df_bp002_achievem <- read_csv(here("released_output/joined/measures/measures_bp002_achievem.csv")) |>
+  tidy_category_names(group = group, 
+                      category = category, 
+                      sex  = "sex",
+                      imd  = "imd", imd_explicit_na = FALSE,
+                      care_home = "care_home", 
+                      learning_disability = "learning_disability")
+
+```
+
+# BP002 Business Rules
+
+:::{.column-body-outset}
++-------------+-----------------------------------------+----------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Number      | Rule                                    | Action if true | Action if false | Rule description or comments                                                                                                                                      |                                                                                                                                   
++:============+:========================================+:===============+:================+:==================================================================================================================================================================+
+| 1           | If `PAT_AGE` \< 45                      | Reject         | Next rule       | Reject patients from the specified population who are aged less than 45 years old.                                                                                |
++-------------+-----------------------------------------+----------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| 2           | If `BP_DAT` \> (`PPED` - 5 years)       | Select         | Next rule       | Select patients passed to this rule who had their blood pressure recorded in the 5 year period leading up to and including the payment period end date.           |
++-------------+-----------------------------------------+----------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| 3           | If `BPDEC_DAT` \> (`PPED` - 5 years)    | Reject         | Next rule       | Reject patients passed to this rule chose not to have their blood pressure recorded in the 5 year period leading up to and including the payment period end date. |
++-------------+-----------------------------------------+----------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| 4           | If `REG_DAT` \> (`PPED` - 3 months)     | Reject         | Select          | Reject patients passed to this rule who registered with the GP practice in the 3 month period leading up to and including the payment period end date.            |
++-------------+-----------------------------------------+----------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+: BP002 Denominator Rules {#tbl-bp002-denom-rules}
+: {tbl-colwidths="[5,25,10,10,50]"}
+:::
+
+:::{.column-body-outset}
++-------------+-----------------------------------------+----------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Number      | Rule                                    | Action if true | Action if false | Rule description or comments                                                                                                                                      |                                                                                                                                   
++:============+:========================================+:===============+:================+:==================================================================================================================================================================+
+| 1           | If `BP_DAT` \> (`PPED` - 5 years)       | Select         | Reject          | Select patients from the denominator who had their blood pressure recorded in the 5 year period leading up to and including the payment period end date. Reject the remaining patients. |
++-------------+-----------------------------------------+----------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+: BP002 Numerator Rule {#tbl-bp002-num-rules}
+: {tbl-colwidths="[5,25,10,10,50]"}
+:::
+
