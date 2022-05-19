@@ -13,3 +13,6 @@ venv/
 notebooks/exclusions/bp002_exclusions.html
 notebooks/exclusions/bp002_exclusions_files/
 notebooks/exclusions/metadata/db.sqlite
+notebooks/achievement/qof_bp_report_files/*
+notebooks/dummy_data_test/dummy_data_test_files/*
+notebooks/achievement/qof_bp_report.html

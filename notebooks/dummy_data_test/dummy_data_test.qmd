@@ -1,0 +1,95 @@
+---
+title: "DUMMY DATA TEST REPORT"
+execute:
+  warning: false
+  message: false
+format:
+  html:
+    code-fold: true
+    code-summary: "Show code"
+    toc: true
+    toc-location: left
+    number-sections: true
+    number-depth: 3
+    page-layout: article
+    fig-width: 10
+    fig-height: 6
+bibliography: "references.bib"
+---
+
+```{r}
+#| echo: false
+library(tidyverse)
+library(here)
+source(here("lib", "tidy_data.R"))
+```
+
+```{r}
+df_bp002_achievem <- read_csv(here("output/joined/measures/measures_bp002_achievem.csv")) |>
+  tidy_category_names(group = group, 
+                      category = category, 
+                      sex  = "sex",
+                      imd  = "imd", imd_explicit_na = FALSE,
+                      care_home = "care_home", 
+                      learning_disability = "learning_disability")
+
+```
+
+# Introduction
+
+> *The Quality and Outcomes Framework (QOF) is a voluntary annual reward and incentive programme for all GP practices in England* [@NHSDigital2021].
+> *The objective of the Quality and Outcomes Framework (QOF) is to improve the quality of care patients are given by rewarding practices for the quality of care they provide to their patients, based on a number of indicators across a range of key areas of clinical care and public health.* *QOF participation by GP practices is very high, with 96.7% of practices participating in the 2020/21 publication* [@NHSDigital2021a].
+
+# BP002 Business Rules
+
+:::{.column-body-outset}
++-------------+-----------------------------------------+----------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Number      | Rule                                    | Action if true | Action if false | Rule description or comments                                                                                                                                      |                                                                                                                                   
++:============+:========================================+:===============+:================+:==================================================================================================================================================================+
+| 1           | If `PAT_AGE` \< 45                      | Reject         | Next rule       | Reject patients from the specified population who are aged less than 45 years old.                                                                                |
++-------------+-----------------------------------------+----------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| 2           | If `BP_DAT` \> (`PPED` - 5 years)       | Select         | Next rule       | Select patients passed to this rule who had their blood pressure recorded in the 5 year period leading up to and including the payment period end date.           |
++-------------+-----------------------------------------+----------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| 3           | If `BPDEC_DAT` \> (`PPED` - 5 years)    | Reject         | Next rule       | Reject patients passed to this rule chose not to have their blood pressure recorded in the 5 year period leading up to and including the payment period end date. |
++-------------+-----------------------------------------+----------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| 4           | If `REG_DAT` \> (`PPED` - 3 months)     | Reject         | Select          | Reject patients passed to this rule who registered with the GP practice in the 3 month period leading up to and including the payment period end date.            |
++-------------+-----------------------------------------+----------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+: BP002 Denominator Rules {#tbl-bp002-denom-rules}
+: {tbl-colwidths="[5,25,10,10,50]"}
+:::
+
+:::{.column-body-outset}
++-------------+-----------------------------------------+----------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Number      | Rule                                    | Action if true | Action if false | Rule description or comments                                                                                                                                      |                                                                                                                                   
++:============+:========================================+:===============+:================+:==================================================================================================================================================================+
+| 1           | If `BP_DAT` \> (`PPED` - 5 years)       | Select         | Reject          | Select patients from the denominator who had their blood pressure recorded in the 5 year period leading up to and including the payment period end date. Reject the remaining patients. |
++-------------+-----------------------------------------+----------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+: BP002 Numerator Rule {#tbl-bp002-num-rules}
+: {tbl-colwidths="[5,25,10,10,50]"}
+:::
+
+```{r}
+#| column: body-outset
+#| layout: [[100]]
+df_bp002_achievem |>
+  filter(group == "population") |>
+  ggplot(aes(x = date, y = population, colour = category)) +
+  geom_point() +
+  geom_line(alpha = .5) +
+  ggplot2::scale_y_continuous(labels = scales::label_comma()) +
+  scale_x_date(date_breaks = "2 months",
+               labels = scales::label_date_short()) +
+  labs(x = NULL, 
+       y = "TEST",
+       colour = NULL) +
+  ggplot2::scale_colour_viridis_d(na.value = "grey50") +
+  ggplot2::geom_vline(
+           xintercept = lubridate::as_date(c("2029-04-01",
+                                             "2020-04-01",
+                                             "2021-04-01")),
+           linetype = "dotted",
+           colour = "orange",
+           size = 1) +
+    ggplot2::theme(text = ggplot2::element_text(size = 12)) +
+    ggplot2::theme(legend.position = "none")
+```
