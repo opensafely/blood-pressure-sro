@@ -12,3 +12,4 @@ venv/
 /released_output/*
 notebooks/bp002_exclusions.html
 notebooks/bp002_exclusions_files/
+notebooks/metadata/db.sqlite

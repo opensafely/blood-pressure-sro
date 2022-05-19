@@ -12,19 +12,33 @@ format:
     number-sections: true
     number-depth: 3
     page-layout: article
+    fig-width: 10
+    fig-height: 6
 ---
 
-```{r load-pkgs}
+```{r}
 #| echo: false
 library(tidyverse)
 library(here)
-library(ggstream)
 source(here("lib/tidy_data.R"))
 ```
 
-```{r load-data}
-df_bp002_achievem <- read_csv(here("released_output/joined/measures/measures_bp002_achievem.csv"))
-df_bp002_excl <- read_csv(here("released_output/joined/measures/measures_bp002_excl.csv"))
+```{r}
+df_bp002_achievem <- read_csv(here("released_output/joined/measures/measures_bp002_achievem.csv")) |>
+  tidy_category_names(group = group, 
+                      category = category, 
+                      sex  = "sex",
+                      imd  = "imd", imd_explicit_na = FALSE,
+                      care_home = "care_home", 
+                      learning_disability = "learning_disability")
+
+df_bp002_excl <- read_csv(here("released_output/joined/measures/measures_bp002_excl.csv")) |>
+  tidy_category_names(group = group, 
+                      category = category, 
+                      sex  = "sex",
+                      imd  = "imd", imd_explicit_na = FALSE,
+                      care_home = "care_home", 
+                      learning_disability = "learning_disability")
 ```
 
 # BP002 Business Rules
@@ -57,30 +71,127 @@ df_bp002_excl <- read_csv(here("released_output/joined/measures/measures_bp002_e
 
 
 # Exclusions
-```{r}
 
-# df_bp002_achievem |>
-#   ggplot(aes(x = date, y = value, colour = category)) +
-#   geom_point() +
-#   geom_line() +
-#   facet_wrap(~group)
+## Total target population
+
+```{r}
+#| column: body-outset
+#| layout: [[100]]
+df_bp002_excl |>
+  filter(group == "population") |>
+  ggplot(aes(x = date, y = value, colour = category)) +
+  geom_point() +
+  geom_line(alpha = .5) +
+  facet_grid(vars(excl_rule), vars(group)) +
+  ggplot2::scale_y_continuous(labels = scales::percent) +
+  scale_x_date(date_breaks = "2 months",
+               labels = scales::label_date_short()) +
+  labs(x = NULL, y = "Exclusions from QOF indicator", colour = NULL) +
+  ggplot2::scale_colour_viridis_d(na.value = "grey50") +
+  ggplot2::geom_vline(
+           xintercept = lubridate::as_date("2020-03-01"),
+           linetype = "dotted",
+           colour = "purple",
+           size = 1) +
+  ggplot2::geom_vline(
+           xintercept = lubridate::as_date(c("2029-04-01", "2020-04-01", "2021-04-01")),
+           linetype = "dotted",
+           colour = "orange",
+           size = 1) +
+    ggplot2::theme(text = ggplot2::element_text(size = 12)) +
+    ggplot2::theme(legend.position = "none")
 ```
+
+```{r}
+#| column: body-outset
+#| layout: [[100]]
+df_bp002_excl |>
+  filter(group == "population") |>
+  ggplot(aes(x = date, y = excl_denominator, colour = category)) +
+  geom_point() +
+  geom_line(alpha = .5) +
+  facet_grid(vars(excl_rule), vars(group)) +
+  ggplot2::scale_y_continuous(labels = scales::comma) +
+  scale_x_date(date_breaks = "2 months",
+               labels = scales::label_date_short()) +
+  labs(x = NULL, y = "Exclusions from QOF indicator", colour = NULL) +
+  ggplot2::scale_colour_viridis_d(na.value = "grey50") +
+  ggplot2::geom_vline(
+           xintercept = lubridate::as_date("2020-03-01"),
+           linetype = "dotted",
+           colour = "purple",
+           size = 1) +
+  ggplot2::geom_vline(
+           xintercept = lubridate::as_date(c("2029-04-01", "2020-04-01", "2021-04-01")),
+           linetype = "dotted",
+           colour = "orange",
+           size = 1) +
+    ggplot2::theme(text = ggplot2::element_text(size = 12)) +
+    ggplot2::theme(legend.position = "none")
+```
+
+## Sex 
 
 ```{r}
 #| column: body-outset
 
 df_bp002_excl |>
-  filter(group == "age_band") |>
+  filter(group == "sex") |>
+  filter(category != "missing") |>
   ggplot(aes(x = date, y = value, colour = category)) +
   geom_point() +
-  geom_line() +
+  geom_line(alpha = .5) +
   facet_grid(vars(excl_rule), vars(group)) +
   ggplot2::scale_y_continuous(labels = scales::percent) +
   scale_x_date(date_breaks = "2 months",
                labels = scales::label_date_short()) +
-  labs(x = NULL, y = "Exclusions from QOF indicator") +
-  ggplot2::scale_colour_viridis_d(na.value = "grey50")
+  labs(x = NULL, y = "Exclusions from QOF indicator", colour = NULL) +
+  ggplot2::scale_colour_brewer(palette = "Dark2") +
+  ggplot2::geom_vline(
+           xintercept = lubridate::as_date("2020-03-01"),
+           linetype = "dotted",
+           colour = "purple",
+           size = 1, alpha = .5) +
+  ggplot2::geom_vline(
+           xintercept = lubridate::as_date(c("2029-04-01", "2020-04-01", "2021-04-01")),
+           linetype = "dotted",
+           colour = "orange",
+           size = 1, alpha = .5) +
+    ggplot2::theme(text = ggplot2::element_text(size = 12)) +
+    ggplot2::theme(legend.position = "top")
 ```
+
+## Age band
+
+```{r}
+#| column: body-outset
+#| layout: [[100]]
+df_bp002_excl |>
+  filter(group == "age_band") |>
+  ggplot(aes(x = date, y = value, colour = category)) +
+  geom_point() +
+  geom_line(alpha = .5) +
+  facet_grid(vars(excl_rule), vars(group)) +
+  ggplot2::scale_y_continuous(labels = scales::percent) +
+  scale_x_date(date_breaks = "2 months",
+               labels = scales::label_date_short()) +
+  labs(x = NULL, y = "Exclusions from QOF indicator", colour = NULL) +
+  ggplot2::scale_colour_viridis_d(na.value = "grey50") +
+  ggplot2::geom_vline(
+           xintercept = lubridate::as_date("2020-03-01"),
+           linetype = "dotted",
+           colour = "purple",
+           size = 1, alpha = .5) +
+  ggplot2::geom_vline(
+           xintercept = lubridate::as_date(c("2029-04-01", "2020-04-01", "2021-04-01")),
+           linetype = "dotted",
+           colour = "orange",
+           size = 1, alpha = .5) +
+    ggplot2::theme(text = ggplot2::element_text(size = 12)) +
+    ggplot2::theme(legend.position = "top")
+```
+
+## IMD
 
 ```{r}
 #| column: body-outset
@@ -90,39 +201,56 @@ df_bp002_excl |>
   filter(category != "missing") |>
   ggplot(aes(x = date, y = value, colour = category)) +
   geom_point() +
-  geom_line() +
+  geom_line(alpha = .5) +
   facet_grid(vars(excl_rule), vars(group)) +
   ggplot2::scale_y_continuous(labels = scales::percent) +
   scale_x_date(date_breaks = "2 months",
                labels = scales::label_date_short()) +
-  labs(x = NULL, y = "Exclusions from QOF indicator")
+  labs(x = NULL, y = "Exclusions from QOF indicator", colour = NULL) +
+  ggplot2::scale_colour_viridis_d(na.value = "grey50") +
+  ggplot2::geom_vline(
+           xintercept = lubridate::as_date("2020-03-01"),
+           linetype = "dotted",
+           colour = "purple",
+           size = 1, alpha = .5) +
+  ggplot2::geom_vline(
+           xintercept = lubridate::as_date(c("2029-04-01", "2020-04-01", "2021-04-01")),
+           linetype = "dotted",
+           colour = "orange",
+           size = 1, alpha = .5) +
+    ggplot2::theme(text = ggplot2::element_text(size = 12)) +
+    ggplot2::theme(legend.position = "top")
 ```
+
+
+## Region
 
 ```{r}
 #| column: body-outset
 
 df_bp002_excl |>
   filter(group == "region") |>
-  filter(!is.na(category)) |>
+  filter(category != "missing") |>
   ggplot(aes(x = date, y = value, colour = category)) +
   geom_point() +
-  geom_line() +
+  geom_line(alpha = .5) +
   facet_grid(vars(excl_rule), vars(group)) +
   ggplot2::scale_y_continuous(labels = scales::percent) +
   scale_x_date(date_breaks = "2 months",
                labels = scales::label_date_short()) +
-  labs(x = NULL, y = "Exclusions from QOF indicator")
+  labs(x = NULL, y = "Exclusions from QOF indicator", colour = NULL) +
+  ggplot2::scale_colour_brewer(palette = "Set1") +
+  ggplot2::geom_vline(
+           xintercept = lubridate::as_date("2020-03-01"),
+           linetype = "dotted",
+           colour = "purple",
+           size = 1, alpha = .5) +
+  ggplot2::geom_vline(
+           xintercept = lubridate::as_date(c("2029-04-01", "2020-04-01", "2021-04-01")),
+           linetype = "dotted",
+           colour = "orange",
+           size = 1, alpha = .5) +
+    ggplot2::theme(text = ggplot2::element_text(size = 12)) +
+    ggplot2::theme(legend.position = "top")
 ```
 
-```{r}
-#| column: body-outset
-
-df_bp002_excl |>
-  filter(group == "age_band") |>
-  filter(excl_rule == "bp002_denom_r4") |>
-  ggplot(aes(x = date, y = excl_denominator, fill = category)) +
-      scale_x_date(date_breaks = "2 months",
-               labels = scales::label_date_short()) +
-  geom_stream(bw = 0.75) +
-  ggplot2::theme_classic() 
-```
