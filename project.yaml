@@ -52,7 +52,7 @@ actions:
     run: >
       deciles-charts:v0.0.15
         --input-files output/joined/measure_*.csv
-        --output-dir output
+        --output-dir output/joined/
     config:
       show_outer_percentiles: false
       tables:
@@ -62,7 +62,7 @@ actions:
     needs: [generate_measures_bp002]
     outputs:
       moderately_sensitive:
-        deciles_charts: output/deciles_*_*.*
+        deciles_charts: output/joined/deciles_*_*.*
       
   join_measures:
     run: r:latest analysis/join_measures.R
@@ -71,10 +71,3 @@ actions:
       moderately_sensitive:
         bp002_achievement_csv: output/joined/measures/measures_bp002_achievem.csv
         bp002_exclusion_csv: output/joined/measures/measures_bp002_excl.csv
-
-  join_deciles_tables:
-    run: r:latest analysis/join_deciles_tables.R
-    needs: [generate_deciles_charts]
-    outputs:
-      moderately_sensitive:
-        bp002_deciles_table_csv: output/joined/measures/measures_bp002_deciles_tables.csv
