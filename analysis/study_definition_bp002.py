@@ -52,6 +52,13 @@ measures = [
         small_number_suppression=True,
     ),
     Measure(
+        id="bp002_achievem_population_rate_r",
+        numerator="bp002_numerator_r",
+        denominator="bp002_denominator_r",
+        group_by=["population"],
+        small_number_suppression=True,
+    ),
+    Measure(
         id="bp002_achievem_practice_rate",
         numerator="bp002_numerator",
         denominator="bp002_denominator",

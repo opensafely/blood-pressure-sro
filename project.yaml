@@ -38,12 +38,19 @@ actions:
       highly_sensitive:
         cohort: output/joined/input_bp002*.csv
 
+  calc_qofr_bp002:
+    run: r:analysis/calc_qofr_bp002.R
+    needs: [join_ethnicity_bp002]
+    outputs:
+      highly_sensitive:
+        cohort: output/joined/input_bp002*.csv
+
   generate_measures_bp002:
      run: >
        cohortextractor:latest generate_measures 
        --study-definition study_definition_bp002 
        --output-dir=output/joined
-     needs: [join_ethnicity_bp002]
+     needs: [calc_qofr_bp002]
      outputs:
        moderately_sensitive:
          measure_csv: output/joined/measure_bp002_*_rate.csv
