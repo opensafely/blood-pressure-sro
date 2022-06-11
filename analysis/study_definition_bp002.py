@@ -52,7 +52,7 @@ measures = [
         small_number_suppression=True,
     ),
     Measure(
-        id="bp002_achievem_practice_rate",
+        id="bp002_achievem_practice_breakdown_rate",
         numerator="bp002_numerator",
         denominator="bp002_denominator",
         group_by=["practice"],
