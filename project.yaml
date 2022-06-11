@@ -20,7 +20,7 @@ actions:
     run: > 
       cohortextractor:latest generate_cohort 
       --study-definition study_definition_bp002 
-      --index-date-range "2019-03-01 to 2022-03-01 by month" 
+      --index-date-range "2019-03-01 to 2022-04-01 by month" 
       --output-dir=output
       --output-format=csv
     outputs:
@@ -62,7 +62,8 @@ actions:
     needs: [generate_measures_bp002]
     outputs:
       moderately_sensitive:
-        deciles_charts: output/joined/deciles_*_*.*
+        deciles_charts: output/joined/deciles_chart_*_*_practice_breakdown_rate.png
+        deciles_tables: output/joined/deciles_table_*_*_practice_breakdown_rate.csv
       
   join_measures:
     run: r:latest analysis/join_measures.R

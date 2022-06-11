@@ -9,6 +9,7 @@ from config import (
     end_date,
     demographic_breakdowns,
     bp002_exclusions,
+    bp002_flowchart,
 )
 from codelists_bp import bp_codes, bp_dec_codes
 
@@ -42,7 +43,7 @@ study = StudyDefinition(
     **bp002_variables,
 )
 
-# Create blood pressure achievement measures (2)
+# Create blood pressure achievement measures
 measures = [
     Measure(
         id="bp002_achievem_population_rate",
@@ -52,7 +53,7 @@ measures = [
         small_number_suppression=True,
     ),
     Measure(
-        id="bp002_achievem_practice_rate",
+        id="bp002_achievem_practice_breakdown_rate",
         numerator="bp002_numerator",
         denominator="bp002_denominator",
         group_by=["practice"],
@@ -60,7 +61,7 @@ measures = [
     ),
 ]
 
-# Create blood pressure exclusion measures (3) for total population
+# Create blood pressure exclusion measures for total population
 for exclusion in bp002_exclusions:
     m = Measure(
         id=f"""bp002_{exclusion.lstrip("bp002_")}_population_rate""",
@@ -71,7 +72,7 @@ for exclusion in bp002_exclusions:
     )
     measures.append(m)
 
-# Create demographic breakdowns (7) for blood pressure indicator BP002 measures
+# Create demographic breakdowns for blood pressure indicator BP002 measures
 for breakdown in demographic_breakdowns:
     m = Measure(
         id=f"bp002_achievem_{breakdown}_breakdown_rate",
@@ -82,7 +83,7 @@ for breakdown in demographic_breakdowns:
     )
     measures.append(m)
 
-# Create demographic breakdowns for blood pressure exclusion measures (7 * 3)
+# Create demographic breakdowns for blood pressure exclusion measures
 for breakdown in demographic_breakdowns:
     for exclusion in bp002_exclusions:
         m = Measure(
@@ -93,3 +94,14 @@ for breakdown in demographic_breakdowns:
             small_number_suppression=True,
         )
         measures.append(m)
+
+# Create bloow pressure flowchart count measures
+for select_reject in bp002_flowchart:
+    m = Measure(
+        id=f"bp002_flow_{select_reject}_population_rate",
+        numerator=f"bp002_{select_reject}",
+        denominator="population",
+        group_by=["population"],
+        small_number_suppression=True,
+    )
+    measures.append(m)
