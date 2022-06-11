@@ -101,8 +101,8 @@ bp002_variables = dict(
     ),
     bp002_denominator_r2_select=patients.satisfying(
         """
-        hyp003_denominator_r1 AND
-        hyp003_denominator_r2
+        bp002_denominator_r1 AND
+        bp002_denominator_r2
         """
     ),
     bp002_denominator_r3_reject=patients.satisfying(
