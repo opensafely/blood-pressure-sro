@@ -87,6 +87,39 @@ bp002_variables = dict(
         NOT reg_dat_3m
         """
     ),
+    # Add flowchart counts for each select / reject rule
+    # NOTE: Some of these variables are coded as "select" variables
+    # and not "reject" as specified in the business rules:
+    # - hyp003_denominator_r1 (special case, this is a select variable
+    # but needs to be reversed for counting exclusions)
+    # - hyp003_denominator_r7 (specified as reject in business rules)
+    # - reg_9m (specified as reject in business rules)
+    bp002_denominator_r1_reject=patients.satisfying(
+        """
+        bp002_denominator_r1
+        """
+    ),
+    bp002_denominator_r2_select=patients.satisfying(
+        """
+        hyp003_denominator_r1 AND
+        hyp003_denominator_r2
+        """
+    ),
+    bp002_denominator_r3_reject=patients.satisfying(
+        """
+        bp002_denominator_r1 AND
+        (NOT hyp003_denominator_r2) AND
+        bp_dec_5y
+        """
+    ),
+    bp002_denominator_r4_reject=patients.satisfying(
+        """
+        bp002_denominator_r1 AND
+        (NOT hyp003_denominator_r2) AND
+        hyp003_denominator_r3 AND
+        (NOT reg_dat_3m)
+        """
+    ),
     bp002_denominator=patients.satisfying(
         """
         bp002_denominator_r1 AND
