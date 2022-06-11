@@ -23,3 +23,10 @@ bp002_exclusions = [
     "bp002_excl_denominator_r3",
     "bp002_excl_denominator_r4",
 ]
+
+bp002_flowchart = [
+    "denominator_r1_reject",
+    "denominator_r2_select",
+    "denominator_r3_reject",
+    "denominator_r4_reject",
+]
