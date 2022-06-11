@@ -15,7 +15,7 @@ demographic_breakdowns = [
     "region",
     "care_home",
     "learning_disability",
-    "imd",
+    "imd_q5",
     "ethnicity",
 ]
 
