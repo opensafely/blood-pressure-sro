@@ -36,6 +36,9 @@ bp002_achievem_breakdown_measures <- fs::dir_ls(
     glob = "*measure_bp002_achievem_*_breakdown_rate.csv$"
 )
 
+# Remove practice level data from achievement measures
+bp002_achievem_breakdown_measures <- bp002_achievem_breakdown_measures[!stringr::str_detect(bp002_achievem_breakdown_measures, "practice")]
+
 bp002_achievem_population_measures <- fs::dir_ls(
     path = "output/joined",
     glob = "*measure_bp002_achievem_population_rate.csv$"
