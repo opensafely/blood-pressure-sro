@@ -37,7 +37,7 @@ The following list outlines the the general steps for implementing QOF indicator
    The codelists can be found on OpenCodelists under [NHSD Primary Care Domain Refsets](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/).
 2. Define the variables specified in the business rules in shared variable dictionaries or individyal study definitions
 3. Implement QOF numerator and denominator rules in study definition (see [here](#study-definitions))
-4. Specify measures (e.g., percentage achievement, exclusions, and breakdowns) for each indicator (see [here](#measures))
+4. Specify measures (e.g., percentage of patients receiving indicated care, exclusions, and breakdowns) for each indicator (see [here](#measures))
 
 **More details and reusable code for implementing QOF registers in OpenSAFELY are available in the [qof-utilities](https://github.com/opensafely/qof-utilities) GitHub repository.**
 
@@ -91,9 +91,9 @@ Variables that are shared by multiple QOF indicators are specified in dictionari
 
 ### Measures
 
-The main results (montly percentage achievement per incicator) are calculated using the `Measure()` framework (see [OpenSAFELY documentation](https://docs.opensafely.org/measures/)).
+The main results (montly percentage of patients receiving indicated care per incicator) are calculated using the `Measure()` framework (see [OpenSAFELY documentation](https://docs.opensafely.org/measures/)).
 The following results are calculated for each measure:
-- Percentage achievement of:
+- Percentage of patients receiving indicated care:
   - the total target population: `measure_<condition_tag>_achievem_population_rate.csv`
   - different demographic and clinical breakdowns (see demographic_breakdowns list in [analysis/config.py](analysis/config.py)): `measure_<condition_tag>_achievem_<breakdown_tag>_breakdown_rate.csv`
   - individual GP practices; this data is only used to generate deciles using the reusable action [deciles-charts](https://github.com/opensafely-actions/deciles-charts)
