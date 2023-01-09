@@ -6,7 +6,7 @@ start_date = "2019-03-01"
 # Study end date
 # Note: This should match the end dates in project.yaml
 # In QOF also: Payment Period End Date (PPED)
-end_date = "2022-03-01"
+end_date = "2022-10-01"
 
 # demographic variables by which code use is broken down
 demographic_breakdowns = [
