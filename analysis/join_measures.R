@@ -1,6 +1,7 @@
 # This scrip loads all measure files and
 # (1) joins them together
 # (2) rounds counts to the nearest 10
+# (3) recalculate value after rounding
 
 # Note that the ungrouped measure (population) and grouped measures
 # differ in the number of their variables
@@ -50,7 +51,8 @@ df_bp002_achievem_breakdown <- read_breakdown_measures(bp002_achievem_breakdown_
 df_bp002_achievem <- dplyr::bind_rows(df_bp002_achievem_population, df_bp002_achievem_breakdown)
 
  df_bp002_achievem <- df_bp002_achievem %>% 
-  round_variables(c("bp002_numerator", "bp002_denominator", "population"))
+  round_variables(c("bp002_numerator", "bp002_denominator", "population")) %>%
+  mutate(value = bp002_numerator / bp002_denominator)
 
 readr::write_csv(df_bp002_achievem,
                  here::here("output", "joined", "measures", "measures_bp002_achievem.csv"))
@@ -77,7 +79,8 @@ df_bp002_excl <- dplyr::bind_rows(df_bp002_excl_dr3_population,
                                   df_bp002_excl_dr4_breakdown)
 
 df_bp002_excl <- df_bp002_excl %>% 
-  round_variables(c("excl_denominator", "population"))
+  round_variables(c("excl_denominator", "population")) %>%
+  mutate(value = excl_denominator / population)
 
 readr::write_csv(df_bp002_excl,
                  here::here("output", "joined", "measures", "measures_bp002_excl.csv"))
