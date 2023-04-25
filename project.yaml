@@ -20,7 +20,7 @@ actions:
     run: > 
       cohortextractor:latest generate_cohort 
       --study-definition study_definition_bp002_1y_lookback
-      --index-date-range "2019-04-01 to 2023-03-31 by month" 
+      --index-date-range "2019-03-01 to 2023-03-31 by month" 
       --output-dir=output
       --output-format=csv
     outputs:
@@ -31,7 +31,7 @@ actions:
     run: > 
       cohortextractor:latest generate_cohort 
       --study-definition study_definition_bp002_5y_lookback 
-      --index-date-range "2019-04-01 to 2023-03-31 by month" 
+      --index-date-range "2019-03-01 to 2023-03-31 by month" 
       --output-dir=output
       --output-format=csv
     outputs:
